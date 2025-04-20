@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "C:\\Abir-007\\basic backend setup\\mongoose-node-express\\logs\\.fd2e1e44f1985b274a805e1b47df516934e463dd-audit.json",
+    "files": [
+        {
+            "date": 1742201664532,
+            "name": "C:\\Abir-007\\basic backend setup\\mongoose-node-express\\logs\\2025-03-17-app.log",
+            "hash": "10c41523474bf9dc638ee2b5fa5448ed4ecab3240dcc7ffcdd06568b8afbdfba"
+        }
+    ],
+    "hashType": "sha256"
+}

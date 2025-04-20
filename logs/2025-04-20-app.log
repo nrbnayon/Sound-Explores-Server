@@ -1,0 +1,221 @@
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:00:49"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:00:49"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:00:49"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:06:19"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:06:19"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:06:20"}
+{"level":"error","message":"Cannot populate path `users.user` because it is not in your schema. Set the `strictPopulate` option to false to override.","path":"users.user","service":"your-service-name","stack":"StrictPopulateError: Cannot populate path `users.user` because it is not in your schema. Set the `strictPopulate` option to false to override.\n    at getModelsMapForPopulate (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\helpers\\populate\\getModelsMapForPopulate.js:50:12)\n    at _populatePath (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\model.js:4446:21)\n    at Function.populate (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\model.js:4413:21)\n    at model.Query._find (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\query.js:2407:20)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at model.Query.exec (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\query.js:4456:63)\n    at async Promise.all (index 0)\n    at _populatePath (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\model.js:4549:5)\n    at async Promise.all (index 0)\n    at Function.populate (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\model.js:4415:5)","timestamp":"2025-04-20 10:06:22"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:06:36"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:06:36"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:06:36"}
+{"level":"error","message":"Cannot populate path `user` because it is not in your schema. Set the `strictPopulate` option to false to override.","path":"user","service":"your-service-name","stack":"StrictPopulateError: Cannot populate path `user` because it is not in your schema. Set the `strictPopulate` option to false to override.\n    at getModelsMapForPopulate (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\helpers\\populate\\getModelsMapForPopulate.js:50:12)\n    at _populatePath (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\model.js:4446:21)\n    at Function.populate (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\model.js:4413:21)\n    at model.Query._find (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\query.js:2407:20)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at model.Query.exec (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\query.js:4456:63)","timestamp":"2025-04-20 10:06:37"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:07:04"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:07:05"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:07:05"}
+{"level":"error","message":"Cannot populate path `user` because it is not in your schema. Set the `strictPopulate` option to false to override.","path":"user","service":"your-service-name","stack":"StrictPopulateError: Cannot populate path `user` because it is not in your schema. Set the `strictPopulate` option to false to override.\n    at getModelsMapForPopulate (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\helpers\\populate\\getModelsMapForPopulate.js:50:12)\n    at _populatePath (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\model.js:4446:21)\n    at Function.populate (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\model.js:4413:21)\n    at model.Query._find (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\query.js:2407:20)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at model.Query.exec (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\query.js:4456:63)","timestamp":"2025-04-20 10:07:05"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:07:16"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:07:17"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:07:17"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:07:24"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:07:24"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:07:24"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:07:31"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:07:32"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:07:32"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:07:39"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:07:39"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:07:39"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:08:32"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:08:32"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:08:32"}
+{"level":"error","message":"Cannot populate path `user` because it is not in your schema. Set the `strictPopulate` option to false to override.","path":"user","service":"your-service-name","stack":"StrictPopulateError: Cannot populate path `user` because it is not in your schema. Set the `strictPopulate` option to false to override.\n    at getModelsMapForPopulate (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\helpers\\populate\\getModelsMapForPopulate.js:50:12)\n    at _populatePath (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\model.js:4446:21)\n    at Function.populate (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\model.js:4413:21)\n    at model.Query._find (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\query.js:2407:20)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at model.Query.exec (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongoose\\lib\\query.js:4456:63)","timestamp":"2025-04-20 10:08:33"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:08:41"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:08:42"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:08:42"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:09:23"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:09:23"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:09:24"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:09:42"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:09:43"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:09:43"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:10:30"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:10:30"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:10:30"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:10:58"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:10:59"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:10:59"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:11:21"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:11:21"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:11:21"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:11:30"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:11:30"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:11:31"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:11:52"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:11:53"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:11:53"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:12:11"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:12:11"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:12:12"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:16:26"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:16:27"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:16:27"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:18:10"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:18:10"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:18:10"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:18:15"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:18:15"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:18:16"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:18:22"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:18:23"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:18:23"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:19:44"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:19:44"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:19:44"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:25:24"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:25:25"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:25:25"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:26:07"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:26:07"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:26:08"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:28:36"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:28:36"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:28:37"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:29:44"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:29:45"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:29:45"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:29:48"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:29:49"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:29:49"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:30:00"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:30:00"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:30:01"}
+{"$clusterTime":{"clusterTime":{"$timestamp":"7495247934779293706"},"signature":{"hash":"+tb7/44KIdfWvBRdIDtiId6/JE8=","keyId":{"high":1735392276,"low":5,"unsigned":false}}},"code":2,"codeName":"BadValue","errorLabelSet":{},"errorResponse":{"$clusterTime":{"clusterTime":{"$timestamp":"7495247934779293706"},"signature":{"hash":"+tb7/44KIdfWvBRdIDtiId6/JE8=","keyId":{"high":1735392276,"low":5,"unsigned":false}}},"code":2,"codeName":"BadValue","errmsg":"unknown operator: $oid","ok":0,"operationTime":{"$timestamp":"7495247934779293706"}},"level":"error","message":"unknown operator: $oid","ok":0,"operationTime":{"$timestamp":"7495247934779293706"},"service":"your-service-name","stack":"MongoServerError: unknown operator: $oid\n    at Connection.sendCommand (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongodb\\src\\cmap\\connection.ts:550:17)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at Connection.command (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongodb\\src\\cmap\\connection.ts:624:22)\n    at Server.command (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongodb\\src\\sdam\\server.ts:337:21)\n    at AggregateOperation.executeCommand (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongodb\\src\\operations\\command.ts:179:12)\n    at AggregateOperation.execute (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongodb\\src\\operations\\aggregate.ts:156:12)\n    at tryOperation (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongodb\\src\\operations\\execute_operation.ts:283:14)\n    at executeOperation (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongodb\\src\\operations\\execute_operation.ts:115:12)\n    at AggregationCursor._initialize (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongodb\\src\\cursor\\aggregation_cursor.ts:92:22)\n    at AggregationCursor.cursorInit (C:\\Abir-007\\Office_Projects\\SoundExplore\\node_modules\\mongodb\\src\\cursor\\abstract_cursor.ts:944:21)","timestamp":"2025-04-20 10:30:01"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:30:43"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:30:43"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:30:43"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:31:41"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:31:42"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:31:42"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:31:48"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:31:48"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:31:48"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:32:35"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:32:36"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:32:36"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:32:41"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:32:41"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:32:42"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:32:47"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:32:47"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:32:49"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:40:55"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:40:56"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:40:56"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:41:18"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:41:18"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:41:19"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:41:38"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:41:39"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:41:39"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:41:40"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:41:52"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:41:52"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:41:52"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:43:41"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:43:41"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:43:42"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:43:58"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:43:58"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:43:59"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:44:06"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:44:06"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:44:07"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:44:21"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:44:21"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:44:22"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:44:32"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:44:32"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:44:33"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:44:35"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:44:35"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:44:35"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:47:46"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:47:47"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:47:47"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:51:44"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:51:45"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:51:45"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:52:04"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:52:05"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:52:05"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:52:14"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:52:15"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:52:15"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:52:33"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:52:33"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:52:33"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:52:39"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:52:40"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:52:40"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:52:48"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:52:48"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:52:48"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:52:55"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:52:55"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:52:55"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:54:39"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:54:39"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:54:39"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:56:08"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:56:08"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:56:09"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:57:33"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:57:34"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:57:34"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 10:57:54"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 10:57:54"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 10:57:54"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 11:01:29"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 11:01:29"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 11:01:30"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 11:02:59"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 11:02:59"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 11:02:59"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 11:03:09"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 11:03:09"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 11:03:09"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 11:03:16"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 11:03:17"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 11:03:17"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 11:03:26"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 11:03:27"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 11:03:27"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 11:03:35"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 11:03:36"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 11:03:36"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 11:06:10"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 11:06:11"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 11:06:11"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 11:06:18"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 11:06:18"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 11:06:19"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 11:09:44"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 11:09:45"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 11:09:45"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 11:11:46"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 11:11:46"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 11:11:47"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 11:11:51"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 11:11:51"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 11:11:52"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 11:19:50"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 11:19:51"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 11:19:51"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 11:19:53"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 11:19:53"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 11:19:53"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 11:19:55"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 11:19:55"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-20 11:19:56"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-20 11:19:57"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-20 11:19:57"}

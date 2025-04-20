@@ -1,0 +1,25 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "C:\\Abir-007\\Office_Projects\\AiFinanceHub\\logs\\.94229e8287ed61de13fb453cf9665ca76f1c7a28-audit.json",
+    "files": [
+        {
+            "date": 1742014376499,
+            "name": "C:\\Abir-007\\Office_Projects\\AiFinanceHub\\logs\\2025-03-15-exceptions.log",
+            "hash": "4ca8d2b7508708018b55afea287657041453301c1db578426f4cda4c379d7620"
+        },
+        {
+            "date": 1742090584952,
+            "name": "C:\\Abir-007\\Office_Projects\\AiFinanceHub\\logs\\2025-03-16-exceptions.log",
+            "hash": "cedbcfcb2fbf89ecd089821fe1150db9691636a0211b2b0cf271e68a2dc62dd9"
+        },
+        {
+            "date": 1742177985396,
+            "name": "C:\\Abir-007\\Office_Projects\\AiFinanceHub\\logs\\2025-03-17-exceptions.log",
+            "hash": "012b7bca431decb7ffd1490fc3c6ad014041f71fd4a1881a37017102543b1da5"
+        }
+    ],
+    "hashType": "sha256"
+}

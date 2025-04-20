@@ -1,0 +1,25 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "C:\\Abir-007\\Office_Projects\\SoundExplore\\logs\\.e8c8b6c95acf8503355b86d3a80a33e7a4c12ada-audit.json",
+    "files": [
+        {
+            "date": 1744867657848,
+            "name": "C:\\Abir-007\\Office_Projects\\SoundExplore\\logs\\2025-04-17-rejections.log",
+            "hash": "2185bddd043418bdbc268962efc038a91370eabd4556567c61e2a8103386f765"
+        },
+        {
+            "date": 1745025771286,
+            "name": "C:\\Abir-007\\Office_Projects\\SoundExplore\\logs\\2025-04-19-rejections.log",
+            "hash": "691b534ac8384b2419ff6c117e821da8935dd7915c99146bf04a4a62b86a4d88"
+        },
+        {
+            "date": 1745121647784,
+            "name": "C:\\Abir-007\\Office_Projects\\SoundExplore\\logs\\2025-04-20-rejections.log",
+            "hash": "99e42822606586fc42a305b86dba226b041c5a941e3759ecc67b3258f248586b"
+        }
+    ],
+    "hashType": "sha256"
+}
