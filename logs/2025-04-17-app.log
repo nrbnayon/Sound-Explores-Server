@@ -28,3 +28,6 @@
 {"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-17 13:12:02"}
 {"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-17 13:12:02"}
 {"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-17 13:12:02"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-17 13:13:03"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-17 13:13:04"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-17 13:13:04"}
