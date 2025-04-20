@@ -44,7 +44,7 @@ const sentlist = async (senderId: string) => {
 
   return result;
 };
-//
+
 export const UserConnectionService = {
   sendRequest,
   sentlist,
