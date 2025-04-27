@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api", router);
 
 app.get("/", (req, res) => {
-  res.send("Hello World! This app name is Ai_Finance_Hub");
+  res.send("Hello World! This app name is Sound Explore");
 });
 
 app.use(express.static(path.join(process.cwd(), "uploads")));

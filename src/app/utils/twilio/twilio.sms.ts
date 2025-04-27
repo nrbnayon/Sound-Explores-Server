@@ -13,7 +13,7 @@ export const generateSMSBody = (
   message: string,
   link: string
 ): string => {
-  return `${sender}\n\nCheck this sound\n\nLink: ${link}`;
+  return `${sender}\n\n${message}\n\nCheck this sound\n\nLink: ${link}`;
 };
 
 export const sendSMS = async (

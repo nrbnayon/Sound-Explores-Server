@@ -6,7 +6,10 @@ import { UserConnectionService } from "./userConnection.service";
 const sendRequest = catchAsync(async (req, res) => {
   const recId = req.body.userId;
   const senderId = req.user.userId;
-  const result = await UserConnectionService.sendRequest([recId, senderId]);
+  const result = await UserConnectionService.sendRequest(
+    [recId, senderId],
+    senderId
+  );
 
   sendResponse(res, {
     success: true,
@@ -26,8 +29,20 @@ const sentlist = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const requestlist = catchAsync(async (req, res) => {
+  const senderId = req.user.userId;
+  const result = await UserConnectionService.requestlist(senderId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: status.OK,
+    message: "Request list fetched successfully",
+    data: result,
+  });
+});
 
 export const UserConnectionController = {
   sendRequest,
   sentlist,
+  requestlist,
 };

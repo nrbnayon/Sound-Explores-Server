@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 
 export interface IUserConnection {
   users: Types.ObjectId[];
+  senderId: Types.ObjectId;
   status: TStatus;
 }
 export const userStatus = {

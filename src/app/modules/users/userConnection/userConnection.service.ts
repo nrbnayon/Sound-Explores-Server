@@ -4,7 +4,15 @@ import status from "http-status";
 import AppError from "../../../errors/AppError";
 import { UserConnection } from "./userConnection.model";
 
-const sendRequest = async (userdata: string[]) => {
+const sendRequest = async (userdata: string[], senderId: string) => {
+  const lengthOfConnection = await UserConnection.find({
+    users: { $in: senderId },
+  });
+
+  if (lengthOfConnection.length > 10) {
+    throw new AppError(500, "You have already made 10 friends.");
+  }
+
   const exists = await UserConnection.findOne({
     users: { $all: userdata },
     $expr: { $eq: [{ $size: "$users" }, 2] },
@@ -28,13 +36,18 @@ const sendRequest = async (userdata: string[]) => {
     return exists;
   }
 
-  const result = await UserConnection.create({ users: userdata });
+  const result = await UserConnection.create({
+    users: userdata,
+    senderId: senderId,
+  });
   return result;
 };
 
 const sentlist = async (senderId: string) => {
   const result = await UserConnection.find({
     users: { $in: [senderId] },
+    senderId,
+    status: "PENDING",
   }).populate({
     path: "users",
     foreignField: "user",
@@ -44,8 +57,25 @@ const sentlist = async (senderId: string) => {
 
   return result;
 };
+
+const requestlist = async (userId: string) => {
+  const result = await UserConnection.find({
+    users: { $in: [userId] },
+    senderId: { $ne: userId },
+    status: "PENDING",
+  }).populate({
+    path: "users",
+    foreignField: "user",
+    model: "UserProfile",
+    select: "fullName  email  nickname  dateOfBirth  phone address  image",
+  });
+
+  return result;
+};
+
 //
 export const UserConnectionService = {
   sendRequest,
+  requestlist,
   sentlist,
 };

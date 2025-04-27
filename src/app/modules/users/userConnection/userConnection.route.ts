@@ -10,5 +10,6 @@ router.post(
 );
 
 router.get("/sent-list", auth("USER"), UserConnectionController.sentlist);
+router.get("/request-list", auth("USER"), UserConnectionController.requestlist);
 
 export const UserConnectionRoute = router;
