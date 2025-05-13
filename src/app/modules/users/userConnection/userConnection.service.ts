@@ -72,10 +72,42 @@ const requestlist = async (userId: string) => {
 
   return result;
 };
+const friendList = async (userId: string) => {
+  const result = await UserConnection.find({
+    users: { $in: [userId] },
+    status: "ACCEPTED",
+  }).populate({
+    path: "users",
+    foreignField: "user",
+    model: "UserProfile",
+    select: "fullName  email  nickname  dateOfBirth  phone address  image",
+  });
+
+  return result;
+};
+
+const removeFriend = async (userIds: string[]) => {
+  const result = await UserConnection.findOneAndUpdate(
+    {
+      users: { $all: userIds, $size: 2 },
+      status: "ACCEPTED",
+    },
+    { status: "REMOVED" },
+    { new: true }
+  );
+
+  if (!result) {
+    throw new Error("Connection not found.");
+  }
+
+  return result;
+};
 
 //
 export const UserConnectionService = {
   sendRequest,
   requestlist,
   sentlist,
+  friendList,
+  removeFriend,
 };

@@ -1,0 +1,3 @@
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-04-29 08:58:45"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-04-29 08:58:47"}
+{"level":"info","message":"Example app listening on port 4500 & ip:192.168.10.18","service":"your-service-name","timestamp":"2025-04-29 08:58:47"}

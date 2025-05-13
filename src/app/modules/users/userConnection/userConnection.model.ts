@@ -7,10 +7,10 @@ const UserConnectionSchema = new Schema<IUserConnection>(
       type: [Schema.Types.ObjectId],
       required: true,
     },
-
+    senderId: { type: Schema.Types.ObjectId, required: true },
     status: {
       type: String,
-      enum: Object.keys(userStatus),
+      enum: Object.values(userStatus),
       default: userStatus.PENDING,
     },
   },

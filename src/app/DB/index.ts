@@ -40,11 +40,10 @@ const seedAdmin = async (): Promise<void> => {
     await session.commitTransaction();
     session.endSession();
   } catch (error) {
-    logger.error("Faield to create Admin");
-
+    logger.error(error);
     await session.abortTransaction();
     session.endSession();
-    throw error;
+    //  throw error;
   }
 };
 

@@ -15,6 +15,7 @@ import User from "./user.model";
 import { AdminProfile } from "../adminProfile/adminProfile.model";
 import { IAdminProfile } from "../adminProfile/adminProfile.interface";
 import { removeFalsyFields } from "../../../utils/helper/removeFalsyField";
+import mongoose from "mongoose";
 
 const createUser = async (data: {
   email: string;
@@ -181,7 +182,40 @@ const updateProfileData = async (
   return updated;
 };
 
+const getMe = async (userId: string) => {
+  const userWithProfile = await User.aggregate([
+    {
+      $match: { _id: new mongoose.Types.ObjectId(userId) }, // Match the user by userId
+    },
+    {
+      $lookup: {
+        from: "userprofiles", // Name of the UserProfile collection
+        localField: "_id", // The field from the User collection to join on
+        foreignField: "user", // The field in the UserProfile collection that references User
+        as: "profile", // The alias for the joined data
+      },
+    },
+    {
+      $unwind: "$profile", // Unwind the profile array (because $lookup returns an array)
+    },
+    {
+      $project: {
+        email: 1, // Include the fields you want from User
+        role: 1,
+        profile: 1, // Include the profile data
+      },
+    },
+  ]);
+
+  if (userWithProfile.length === 0) {
+    throw new Error("User not found");
+  }
+
+  return userWithProfile[0]; //
+};
+
 export const UserService = {
+  getMe,
   createUser,
   updateProfileImage,
   updateProfileData,

@@ -25,7 +25,7 @@ const addSound = catchAsync(async (req, res) => {
   });
 });
 const getAllSound = catchAsync(async (req, res) => {
-  const result = await SoundService.getAllSound();
+  const result = await SoundService.getAllSound(req.user.userId);
 
   sendResponse(res, {
     success: true,

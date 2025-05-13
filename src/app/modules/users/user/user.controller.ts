@@ -56,7 +56,18 @@ const updateProfileData = catchAsync(async (req, res) => {
   });
 });
 
+const getMe = catchAsync(async (req, res) => {
+  const result = await UserService.getMe(req.user.userId);
+  sendResponse(res, {
+    success: true,
+    statusCode: status.OK,
+    message: "User data is fetched successfully.",
+    data: result,
+  });
+});
+
 export const UserController = {
+  getMe,
   createUser,
   getAllUser,
   updateProfileImage,

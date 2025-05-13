@@ -41,8 +41,34 @@ const requestlist = catchAsync(async (req, res) => {
   });
 });
 
+const friendList = catchAsync(async (req, res) => {
+  const senderId = req.user.userId;
+  const result = await UserConnectionService.friendList(senderId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: status.OK,
+    message: "Request list fetched successfully",
+    data: result,
+  });
+});
+const removeFriend = catchAsync(async (req, res) => {
+  const senderId = req.user.userId;
+  const recId = req.body.userId;
+  const result = await UserConnectionService.removeFriend([senderId, recId]);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: status.OK,
+    message: "Friend removed successfully",
+    data: result,
+  });
+});
+
 export const UserConnectionController = {
   sendRequest,
   sentlist,
   requestlist,
+  friendList,
+  removeFriend,
 };
