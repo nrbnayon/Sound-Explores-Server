@@ -19,10 +19,13 @@ const superUserProfile = {
 };
 
 const seedAdmin = async (): Promise<void> => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  superUser.password = await getHashedPassword(superUser.password as string);
+  let session;
   try {
+    session = await mongoose.startSession();
+    session.startTransaction();
+
+    superUser.password = await getHashedPassword(superUser.password as string);
+
     const isExistSuperAdmin = await User.findOne({
       role: userRoles.ADMIN,
     }).session(session);
@@ -38,12 +41,19 @@ const seedAdmin = async (): Promise<void> => {
     }
 
     await session.commitTransaction();
-    session.endSession();
   } catch (error) {
     logger.error(error);
-    await session.abortTransaction();
-    session.endSession();
-    //  throw error;
+    if (session) {
+      try {
+        await session.abortTransaction();
+      } catch (abortError) {
+        logger.error("Error aborting transaction:", abortError);
+      }
+    }
+  } finally {
+    if (session) {
+      session.endSession();
+    }
   }
 };
 
