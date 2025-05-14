@@ -65,9 +65,12 @@ const getNewAccessToken = catchAsync(async (req, res) => {
   const refreshToken =
     req.cookies?.refreshToken ||
     req.body?.refreshToken ||
+    req.query?.refreshToken ||
     (req.headers.authorization?.startsWith("Bearer ")
       ? req.headers.authorization.split(" ")[1]
       : null);
+
+  // console.log("RefT::", refreshToken);
 
   const result = await AuthService.getNewAccessToken(refreshToken);
 
