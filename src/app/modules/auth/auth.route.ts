@@ -4,7 +4,8 @@ import { auth } from "../../middleware/auth/auth";
 
 const router = Router();
 
-router.get("/get-access-token", AuthController.getNewAccessToken);
+// router.get("/get-access-token", AuthController.getNewAccessToken);
+router.get("/refresh-token", AuthController.getNewAccessToken);
 
 router.post("/login", AuthController.userLogin);
 

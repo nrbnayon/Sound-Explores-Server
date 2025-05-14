@@ -61,8 +61,16 @@ const resetPassword = catchAsync(async (req, res, next) => {
 });
 
 const getNewAccessToken = catchAsync(async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
+  // Try to get the refresh token from multiple sources
+  const refreshToken =
+    req.cookies?.refreshToken ||
+    req.body?.refreshToken ||
+    (req.headers.authorization?.startsWith("Bearer ")
+      ? req.headers.authorization.split(" ")[1]
+      : null);
+
   const result = await AuthService.getNewAccessToken(refreshToken);
+
   sendResponse(res, {
     data: result,
     success: true,
