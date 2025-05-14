@@ -182,36 +182,83 @@ const updateProfileData = async (
   return updated;
 };
 
+// const getMe = async (userId: string) => {
+//   const userWithProfile = await User.aggregate([
+//     {
+//       $match: { _id: new mongoose.Types.ObjectId(userId) }, // Match the user by userId
+//     },
+//     {
+//       $lookup: {
+//         from: "userprofiles", // Name of the UserProfile collection
+//         localField: "_id", // The field from the User collection to join on
+//         foreignField: "user", // The field in the UserProfile collection that references User
+//         as: "profile", // The alias for the joined data
+//       },
+//     },
+//     {
+//       $unwind: "$profile", // Unwind the profile array (because $lookup returns an array)
+//     },
+//     {
+//       $project: {
+//         email: 1, // Include the fields you want from User
+//         role: 1,
+//         profile: 1, // Include the profile data
+//       },
+//     },
+//   ]);
+
+//   if (userWithProfile.length === 0) {
+//     throw new Error("User not found");
+//   }
+
+//   return userWithProfile[0]; //
+// };
+
 const getMe = async (userId: string) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new AppError(status.NOT_FOUND, "User not found");
+  }
+
+  // Choose the collection based on user role
+  const profileCollection =
+    user.role === "ADMIN" ? "adminprofiles" : "userprofiles";
+
   const userWithProfile = await User.aggregate([
     {
-      $match: { _id: new mongoose.Types.ObjectId(userId) }, // Match the user by userId
+      $match: { _id: new mongoose.Types.ObjectId(userId) },
     },
     {
       $lookup: {
-        from: "userprofiles", // Name of the UserProfile collection
-        localField: "_id", // The field from the User collection to join on
-        foreignField: "user", // The field in the UserProfile collection that references User
-        as: "profile", // The alias for the joined data
+        from: profileCollection, // Dynamically use the correct profile collection
+        localField: "_id",
+        foreignField: "user",
+        as: "profile",
       },
     },
     {
-      $unwind: "$profile", // Unwind the profile array (because $lookup returns an array)
+      $unwind: {
+        path: "$profile",
+        preserveNullAndEmptyArrays: true, // Keep user even if profile doesn't exist
+      },
     },
     {
       $project: {
-        email: 1, // Include the fields you want from User
+        email: 1,
         role: 1,
-        profile: 1, // Include the profile data
+        isVerified: 1,
+        profile: 1,
+        // Can't mix inclusion (1) and exclusion (0) in the same $project
       },
     },
   ]);
 
   if (userWithProfile.length === 0) {
-    throw new Error("User not found");
+    throw new AppError(status.NOT_FOUND, "User profile not found");
   }
 
-  return userWithProfile[0]; //
+  return userWithProfile[0];
 };
 
 export const UserService = {
