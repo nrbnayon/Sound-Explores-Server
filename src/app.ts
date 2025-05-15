@@ -18,6 +18,7 @@ app.use(cors(corsOption));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.use("/api", router);
 
@@ -25,7 +26,7 @@ app.get("/", (req, res) => {
   res.send("Hello World! This app name is Sound Explore");
 });
 
-app.use(express.static(path.join(process.cwd(), "uploads")));
+// app.use(express.static(path.join(process.cwd(), "uploads")));
 
 app.use(globalErrorHandler);
 app.use(noRouteFound);
