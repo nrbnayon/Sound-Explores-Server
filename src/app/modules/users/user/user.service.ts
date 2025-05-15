@@ -21,7 +21,7 @@ import { parsePhoneNumberFromString } from "libphonenumber-js";
 const createUser = async (data: {
   email: string;
   fullName: string;
-  phone: string; 
+  phone: string;
   password: string;
 }): Promise<Partial<IUser>> => {
   const hashedPassword = await getHashedPassword(data.password);
@@ -46,6 +46,7 @@ const createUser = async (data: {
   const userProfileData = {
     fullName: data.fullName,
     email: createdUser.email,
+    phone: normalizedPhone,
     user: createdUser._id,
   };
   await UserProfile.create(userProfileData);
@@ -182,6 +183,13 @@ const updateProfileData = async (
     updated = await UserProfile.findOneAndUpdate({ email: email }, data, {
       new: true,
     });
+    if (data.phone) {
+      await User.findOneAndUpdate(
+        { email: email },
+        { phone: data.phone },
+        { new: true }
+      );
+    }
   }
   if (!updated) {
     throw new AppError(status.BAD_REQUEST, "Failed to update user info.");
@@ -239,7 +247,7 @@ const getMe = async (userId: string) => {
     },
     {
       $lookup: {
-        from: profileCollection, // Dynamically use the correct profile collection
+        from: profileCollection,
         localField: "_id",
         foreignField: "user",
         as: "profile",
@@ -256,7 +264,9 @@ const getMe = async (userId: string) => {
         email: 1,
         role: 1,
         isVerified: 1,
+        name: "$profile.fullName",
         profile: 1,
+        phone: 1,
         // Can't mix inclusion (1) and exclusion (0) in the same $project
       },
     },
