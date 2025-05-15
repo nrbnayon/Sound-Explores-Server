@@ -16,19 +16,27 @@ import { AdminProfile } from "../adminProfile/adminProfile.model";
 import { IAdminProfile } from "../adminProfile/adminProfile.interface";
 import { removeFalsyFields } from "../../../utils/helper/removeFalsyField";
 import mongoose from "mongoose";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 const createUser = async (data: {
   email: string;
   fullName: string;
+  phone: string; 
   password: string;
 }): Promise<Partial<IUser>> => {
   const hashedPassword = await getHashedPassword(data.password);
   const otp = getOtp(4);
   const expDate = getExpiryTime(10);
+  const phoneNumber = parsePhoneNumberFromString(data.phone);
+  if (!phoneNumber || !phoneNumber.isValid()) {
+    throw new Error("Invalid phone number");
+  }
 
+  const normalizedPhone = phoneNumber.number;
   //user data
   const userData = {
     email: data.email,
+    phone: normalizedPhone,
     password: hashedPassword,
     authentication: { otp, expDate },
   };

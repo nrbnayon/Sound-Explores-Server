@@ -7,9 +7,9 @@ import { upload } from "../../../middleware/fileUpload/fileUploadHandler";
 import { auth } from "../../../middleware/auth/auth";
 
 const router = Router();
-router.get("/get-all-user", auth("ADMIN", "USER"), UserController.getAllUser);
-
 router.get("/me", auth("ADMIN", "USER"), UserController.getMe);
+
+router.get("/get-all-user", auth("ADMIN", "USER"), UserController.getAllUser);
 
 router.post(
   "/create-user",

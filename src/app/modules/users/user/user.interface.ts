@@ -3,8 +3,10 @@ import { TUserRole } from "../../../interface/auth.interface";
 
 export interface IBaseUser {
   email: string;
+  phone: string;
   role: TUserRole;
   password: string;
+  agreeToTerms: boolean;
   authentication: {
     expDate: Date;
     otp: number;

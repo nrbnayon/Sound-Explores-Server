@@ -2,9 +2,12 @@ import status from "http-status";
 import catchAsync from "../../../utils/catchAsync";
 import sendResponse from "../../../utils/sendResponse";
 import { UserService } from "./user.service";
+import logger from "../../../utils/logger";
 
 const createUser = catchAsync(async (req, res) => {
   const userData = req.body;
+
+  logger.info("New User", userData);
   const result = await UserService.createUser(userData);
 
   sendResponse(res, {
