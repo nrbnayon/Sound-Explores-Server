@@ -58,13 +58,23 @@ const createUser = async (data: {
   return { email: createdUser.email, isVerified: createdUser.isVerified };
 };
 
-const getAllUser = async (queries: { searchTerm?: string; page?: number }) => {
-  const searchTerm = queries.searchTerm?.trim() || "";
-  const page = Number(queries.page) || 1;
-  const limit = 20;
+const getAllUser = async (queries: {
+  searchTerm?: string;
+  page?: number;
+  limit?: number;
+  excludeUserId?: string;
+}) => {
+  const { searchTerm = "", page = 1, limit = 20, excludeUserId } = queries;
   const skip = (page - 1) * limit;
 
   const pipeline: any[] = [
+    {
+      $match: {
+        ...(excludeUserId && {
+          _id: { $ne: new mongoose.Types.ObjectId(excludeUserId) },
+        }),
+      },
+    },
     {
       $lookup: {
         from: "userprofiles",
@@ -103,7 +113,7 @@ const getAllUser = async (queries: { searchTerm?: string; page?: number }) => {
     },
   ];
 
-  if (searchTerm) {
+  if (searchTerm.trim()) {
     pipeline.push({
       $match: {
         $or: [
@@ -115,12 +125,10 @@ const getAllUser = async (queries: { searchTerm?: string; page?: number }) => {
     });
   }
 
-  // Count total
   const count = await User.aggregate([...pipeline, { $count: "total" }]);
   const totalItem = count[0]?.total || 0;
   const totalPage = Math.ceil(totalItem / limit);
 
-  // Pagination
   pipeline.push({ $skip: skip }, { $limit: limit });
 
   const users = await User.aggregate(pipeline);

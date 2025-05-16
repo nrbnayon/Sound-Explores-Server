@@ -19,7 +19,14 @@ const createUser = catchAsync(async (req, res) => {
 });
 
 const getAllUser = catchAsync(async (req, res) => {
-  const result = await UserService.getAllUser(req.query);
+  const currentUserId = req.user.userId;
+  const { search, page, limit } = req.query;
+  const result = await UserService.getAllUser({
+    searchTerm: search as string,
+    page: Number(page),
+    limit: Number(limit),
+    excludeUserId: currentUserId,
+  });
 
   sendResponse(res, {
     success: true,

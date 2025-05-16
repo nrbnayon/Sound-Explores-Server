@@ -14,10 +14,11 @@ const sendRequest = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: status.OK,
-    message: "Request send successfully",
+    message: "Request sent successfully",
     data: result,
   });
 });
+
 const sentlist = catchAsync(async (req, res) => {
   const senderId = req.user.userId;
   const result = await UserConnectionService.sentlist(senderId);
@@ -29,9 +30,10 @@ const sentlist = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
 const requestlist = catchAsync(async (req, res) => {
-  const senderId = req.user.userId;
-  const result = await UserConnectionService.requestlist(senderId);
+  const userId = req.user.userId;
+  const result = await UserConnectionService.requestlist(userId);
 
   sendResponse(res, {
     success: true,
@@ -42,25 +44,76 @@ const requestlist = catchAsync(async (req, res) => {
 });
 
 const friendList = catchAsync(async (req, res) => {
-  const senderId = req.user.userId;
-  const result = await UserConnectionService.friendList(senderId);
+  const userId = req.user.userId;
+  const result = await UserConnectionService.friendList(userId);
 
   sendResponse(res, {
     success: true,
     statusCode: status.OK,
-    message: "Request list fetched successfully",
+    message: "Friend list fetched successfully",
     data: result,
   });
 });
+
 const removeFriend = catchAsync(async (req, res) => {
-  const senderId = req.user.userId;
+  const userId = req.user.userId;
   const recId = req.body.userId;
-  const result = await UserConnectionService.removeFriend([senderId, recId]);
+  const result = await UserConnectionService.removeFriend([userId, recId]);
 
   sendResponse(res, {
     success: true,
     statusCode: status.OK,
     message: "Friend removed successfully",
+    data: result,
+  });
+});
+
+// NEW CONTROLLERS FOR THE MISSING ENDPOINTS
+
+const acceptRequest = catchAsync(async (req, res) => {
+  const receiverId = req.user.userId;
+  const senderId = req.body.userId;
+  const result = await UserConnectionService.acceptRequest([
+    senderId,
+    receiverId,
+  ]);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: status.OK,
+    message: "Friend request accepted successfully",
+    data: result,
+  });
+});
+
+const rejectRequest = catchAsync(async (req, res) => {
+  const receiverId = req.user.userId;
+  const senderId = req.body.userId;
+  const result = await UserConnectionService.rejectRequest([
+    senderId,
+    receiverId,
+  ]);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: status.OK,
+    message: "Friend request rejected successfully",
+    data: result,
+  });
+});
+
+const cancelRequest = catchAsync(async (req, res) => {
+  const senderId = req.user.userId;
+  const receiverId = req.body.userId;
+  const result = await UserConnectionService.cancelRequest([
+    senderId,
+    receiverId,
+  ]);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: status.OK,
+    message: "Friend request canceled successfully",
     data: result,
   });
 });
@@ -71,4 +124,7 @@ export const UserConnectionController = {
   requestlist,
   friendList,
   removeFriend,
+  acceptRequest, 
+  rejectRequest, 
+  cancelRequest, 
 };

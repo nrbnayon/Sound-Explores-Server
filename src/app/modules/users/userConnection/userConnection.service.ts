@@ -19,7 +19,10 @@ const sendRequest = async (userdata: string[], senderId: string) => {
   });
 
   if (exists?.status === "BLOCKED") {
-    throw new AppError(status.BAD_REQUEST, "You havebeen blocked by the user.");
+    throw new AppError(
+      status.BAD_REQUEST,
+      "You have been blocked by the user."
+    );
   }
 
   if (exists?.status === "PENDING") {
@@ -52,7 +55,7 @@ const sentlist = async (senderId: string) => {
     path: "users",
     foreignField: "user",
     model: "UserProfile",
-    select: "fullName  email  nickname  dateOfBirth  phone address  image",
+    select: "fullName email nickname dateOfBirth phone address image",
   });
 
   return result;
@@ -67,11 +70,12 @@ const requestlist = async (userId: string) => {
     path: "users",
     foreignField: "user",
     model: "UserProfile",
-    select: "fullName  email  nickname  dateOfBirth  phone address  image",
+    select: "fullName email nickname dateOfBirth phone address image",
   });
 
   return result;
 };
+
 const friendList = async (userId: string) => {
   const result = await UserConnection.find({
     users: { $in: [userId] },
@@ -80,7 +84,7 @@ const friendList = async (userId: string) => {
     path: "users",
     foreignField: "user",
     model: "UserProfile",
-    select: "fullName  email  nickname  dateOfBirth  phone address  image",
+    select: "fullName email nickname dateOfBirth phone address image",
   });
 
   return result;
@@ -103,11 +107,87 @@ const removeFriend = async (userIds: string[]) => {
   return result;
 };
 
-//
+// NEW SERVICE FUNCTIONS FOR THE MISSING ENDPOINTS
+
+const acceptRequest = async (userIds: string[]) => {
+  const connection = await UserConnection.findOne({
+    users: { $all: userIds, $size: 2 },
+    status: "PENDING",
+  });
+
+  if (!connection) {
+    throw new AppError(status.NOT_FOUND, "Friend request not found");
+  }
+
+  // Ensure the person accepting is not the sender
+  const receiverId = userIds[1];
+  if (connection.senderId.toString() === receiverId) {
+    throw new AppError(
+      status.BAD_REQUEST,
+      "You cannot accept your own friend request"
+    );
+  }
+
+  connection.status = "ACCEPTED";
+  await connection.save();
+  return connection;
+};
+
+const rejectRequest = async (userIds: string[]) => {
+  const connection = await UserConnection.findOne({
+    users: { $all: userIds, $size: 2 },
+    status: "PENDING",
+  });
+
+  if (!connection) {
+    throw new AppError(status.NOT_FOUND, "Friend request not found");
+  }
+
+  // Ensure the person rejecting is not the sender
+  const receiverId = userIds[1];
+  if (connection.senderId.toString() === receiverId) {
+    throw new AppError(
+      status.BAD_REQUEST,
+      "You cannot reject your own friend request"
+    );
+  }
+
+  connection.status = "REMOVED";
+  await connection.save();
+  return connection;
+};
+
+const cancelRequest = async (userIds: string[]) => {
+  const connection = await UserConnection.findOne({
+    users: { $all: userIds, $size: 2 },
+    status: "PENDING",
+  });
+
+  if (!connection) {
+    throw new AppError(status.NOT_FOUND, "Friend request not found");
+  }
+
+  // Ensure the person canceling is the sender
+  const senderId = userIds[0];
+  if (connection.senderId.toString() !== senderId) {
+    throw new AppError(
+      status.BAD_REQUEST,
+      "You can only cancel requests you've sent"
+    );
+  }
+
+  connection.status = "REMOVED";
+  await connection.save();
+  return connection;
+};
+
 export const UserConnectionService = {
   sendRequest,
   requestlist,
   sentlist,
   friendList,
   removeFriend,
+  acceptRequest, 
+  rejectRequest, 
+  cancelRequest, 
 };
