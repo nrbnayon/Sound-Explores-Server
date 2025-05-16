@@ -24,15 +24,65 @@ const addSound = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
 const getAllSound = catchAsync(async (req, res) => {
-  const result = await SoundService.getAllSound(req.user.userId);
+  const { searchTerm, category, page, limit } = req.query;
+
+  const result = await SoundService.getAllSound(
+    req.user.userId,
+    searchTerm as string,
+    category as string,
+    page ? parseInt(page as string, 10) : undefined,
+    limit ? parseInt(limit as string, 10) : undefined
+  );
 
   sendResponse(res, {
     success: true,
-    statusCode: status.CREATED,
+    statusCode: status.OK,
     message: "All sound is fetched successfully",
+    data: result.data,
+    meta: {
+      totalItem: result.pagination.total,
+      totalPage: result.pagination.totalPages,
+      limit: result.pagination.limit,
+      page: result.pagination.page,
+    },
+  });
+});
+
+const deleteSound = catchAsync(async (req, res) => {
+  const { id } = req.params;
+
+  const result = await SoundService.deleteSound(id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: status.OK,
+    message: "Sound deleted successfully",
     data: result,
   });
 });
 
-export const SoundController = { addSound, getAllSound };
+const deleteMultipleSounds = catchAsync(async (req, res) => {
+  const { ids } = req.body;
+
+  if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    throw new Error("No sound IDs provided");
+  }
+
+  const result = await SoundService.deleteMultipleSounds(ids);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: status.OK,
+    message: `${result.deletedCount} sounds deleted successfully`,
+    data: result,
+  });
+});
+
+export const SoundController = {
+  addSound,
+  getAllSound,
+  deleteSound,
+  deleteMultipleSounds,
+};
