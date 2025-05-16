@@ -1,3 +1,4 @@
+// src\app\modules\sendMessge\sendMessage.route.ts
 import { Router } from "express";
 import { auth } from "../../middleware/auth/auth";
 import { SendMessageController } from "./sendMessage.controller";

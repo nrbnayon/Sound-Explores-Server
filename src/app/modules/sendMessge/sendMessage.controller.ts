@@ -4,7 +4,6 @@ import sendResponse from "../../utils/sendResponse";
 import { SendMessageService } from "./sendMessage.service";
 
 const sendMessage = catchAsync(async (req, res) => {
-  console.log(req.user);
   const result = await SendMessageService.sendMessage(
     req.body.users,
     req.body.link,
