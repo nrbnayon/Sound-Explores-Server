@@ -109,18 +109,31 @@ const removeFriend = async (userIds: string[]) => {
 
 // NEW SERVICE FUNCTIONS FOR THE MISSING ENDPOINTS
 
-const acceptRequest = async (userIds: string[]) => {
-  const connection = await UserConnection.findOne({
-    users: { $all: userIds, $size: 2 },
-    status: "PENDING",
-  });
+interface AcceptRequestParams {
+  connectionID: string;
+  receiverId: string;
+}
+
+const acceptRequest = async (
+  connectionID: AcceptRequestParams["connectionID"],
+  receiverId: AcceptRequestParams["receiverId"]
+): Promise<InstanceType<typeof UserConnection> | null> => {
+  // Find the connection by its MongoDB _id
+  const connection = await UserConnection.findById(connectionID);
 
   if (!connection) {
     throw new AppError(status.NOT_FOUND, "Friend request not found");
   }
 
-  // Ensure the person accepting is not the sender
-  const receiverId = userIds[1];
+  // Verify the receiver is part of this connection
+  if (!connection.users.map((id: string | { toString(): string }) => id.toString()).includes(receiverId)) {
+    throw new AppError(
+      status.BAD_REQUEST,
+      "You are not authorized to accept this request"
+    );
+  }
+
+  // Verify the receiver is not the sender
   if (connection.senderId.toString() === receiverId) {
     throw new AppError(
       status.BAD_REQUEST,
@@ -128,23 +141,42 @@ const acceptRequest = async (userIds: string[]) => {
     );
   }
 
+  // Verify the request is pending
+  if (connection.status !== "PENDING") {
+    throw new AppError(status.BAD_REQUEST, "This request is no longer pending");
+  }
+
   connection.status = "ACCEPTED";
   await connection.save();
   return connection;
 };
 
-const rejectRequest = async (userIds: string[]) => {
-  const connection = await UserConnection.findOne({
-    users: { $all: userIds, $size: 2 },
-    status: "PENDING",
-  });
+// Update the rejectRequest service function
+interface RejectRequestParams {
+  connectionID: string;
+  receiverId: string;
+}
+
+const rejectRequest = async (
+  connectionID: RejectRequestParams["connectionID"],
+  receiverId: RejectRequestParams["receiverId"]
+): Promise<InstanceType<typeof UserConnection> | null> => {
+  // Find the connection by its MongoDB _id
+  const connection = await UserConnection.findById(connectionID);
 
   if (!connection) {
     throw new AppError(status.NOT_FOUND, "Friend request not found");
   }
 
-  // Ensure the person rejecting is not the sender
-  const receiverId = userIds[1];
+  // Verify the receiver is part of this connection
+  if (!connection.users.map((id: string | { toString(): string }) => id.toString()).includes(receiverId)) {
+    throw new AppError(
+      status.BAD_REQUEST,
+      "You are not authorized to reject this request"
+    );
+  }
+
+  // Verify the receiver is not the sender
   if (connection.senderId.toString() === receiverId) {
     throw new AppError(
       status.BAD_REQUEST,
@@ -152,23 +184,34 @@ const rejectRequest = async (userIds: string[]) => {
     );
   }
 
+  // Verify the request is pending 
+  if (connection.status !== "PENDING") {
+    throw new AppError(status.BAD_REQUEST, "This request is no longer pending");
+  }
+
   connection.status = "REMOVED";
   await connection.save();
   return connection;
 };
 
-const cancelRequest = async (userIds: string[]) => {
-  const connection = await UserConnection.findOne({
-    users: { $all: userIds, $size: 2 },
-    status: "PENDING",
-  });
+// Update the cancelRequest service function
+interface CancelRequestParams {
+  connectionID: string;
+  senderId: string;
+}
+
+const cancelRequest = async (
+  connectionID: CancelRequestParams["connectionID"],
+  senderId: CancelRequestParams["senderId"]
+): Promise<InstanceType<typeof UserConnection> | null> => {
+  // Find the connection by its MongoDB _id
+  const connection = await UserConnection.findById(connectionID);
 
   if (!connection) {
     throw new AppError(status.NOT_FOUND, "Friend request not found");
   }
 
-  // Ensure the person canceling is the sender
-  const senderId = userIds[0];
+  // Verify the sender is the one who sent the request
   if (connection.senderId.toString() !== senderId) {
     throw new AppError(
       status.BAD_REQUEST,
@@ -176,18 +219,25 @@ const cancelRequest = async (userIds: string[]) => {
     );
   }
 
+  // Verify the request is pending or accepted
+  if (connection.status !== "PENDING" && connection.status !== "ACCEPTED") {
+    throw new AppError(status.BAD_REQUEST, "This request is no longer pending");
+  }
+  
+
   connection.status = "REMOVED";
   await connection.save();
   return connection;
 };
 
+// Don't forget to export these updated functions
 export const UserConnectionService = {
   sendRequest,
   requestlist,
   sentlist,
   friendList,
   removeFriend,
-  acceptRequest, 
-  rejectRequest, 
-  cancelRequest, 
+  acceptRequest,
+  rejectRequest,
+  cancelRequest,
 };

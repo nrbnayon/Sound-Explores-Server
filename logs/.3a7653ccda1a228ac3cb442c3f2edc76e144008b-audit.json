@@ -1,0 +1,25 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "E:\\JVAI\\Sound\\Sound-Explores-Server\\logs\\.3a7653ccda1a228ac3cb442c3f2edc76e144008b-audit.json",
+    "files": [
+        {
+            "date": 1747319465193,
+            "name": "E:\\JVAI\\Sound\\Sound-Explores-Server\\logs\\2025-05-15-exceptions.log",
+            "hash": "3f217ffa0221e2fb35b73488137f81edde3775b9ed56c065ee79efc6bf93af53"
+        },
+        {
+            "date": 1747333901126,
+            "name": "E:\\JVAI\\Sound\\Sound-Explores-Server\\logs\\2025-05-16-exceptions.log",
+            "hash": "2d385d7b6ac592ecc60b55341e1d7ab5d9b5a17d96790f9f62d84275f89961b7"
+        },
+        {
+            "date": 1747420621872,
+            "name": "E:\\JVAI\\Sound\\Sound-Explores-Server\\logs\\2025-05-17-exceptions.log",
+            "hash": "daa868659b3d2ea48fd7b9b86fdafd436fa9ce2978e4a7b5dfcd2ba3e3688522"
+        }
+    ],
+    "hashType": "sha256"
+}
