@@ -3,6 +3,7 @@
 import status from "http-status";
 import AppError from "../../../errors/AppError";
 import { UserConnection } from "./userConnection.model";
+import mongoose from "mongoose";
 
 const sendRequest = async (userdata: string[], senderId: string) => {
   const lengthOfConnection = await UserConnection.find({
@@ -76,18 +77,111 @@ const requestlist = async (userId: string) => {
   return result;
 };
 
-const friendList = async (userId: string) => {
-  const result = await UserConnection.find({
+interface FriendListQuery {
+  searchTerm?: string;
+  page?: number;
+  limit?: number;
+}
+
+const friendList = async (userId: string, queries: FriendListQuery = {}) => {
+  const { searchTerm = "", page = 1, limit = 20 } = queries;
+  const skip = (page - 1) * limit;
+
+  // First, find all connection IDs where the user is involved and status is ACCEPTED
+  const connections = await UserConnection.find({
     users: { $in: [userId] },
     status: "ACCEPTED",
-  }).populate({
-    path: "users",
-    foreignField: "user",
-    model: "UserProfile",
-    select: "fullName email nickname dateOfBirth phone address image",
   });
 
-  return result;
+  // If there are no connections, return empty results with pagination metadata
+  if (connections.length === 0) {
+    return {
+      meta: {
+        totalItem: 0,
+        totalPage: 0,
+        limit: Number(limit),
+        page: Number(page),
+      },
+      data: [],
+    };
+  }
+
+  // Extract the connection IDs for the aggregation pipeline
+  const connectionIds = connections.map((conn) => conn._id);
+
+  // Build the aggregation pipeline
+  const pipeline = [
+    // Match only the user's accepted connections
+    {
+      $match: {
+        _id: { $in: connectionIds },
+        status: "ACCEPTED",
+      },
+    },
+    // Lookup the user profiles
+    {
+      $lookup: {
+        from: "userprofiles",
+        localField: "users",
+        foreignField: "user",
+        as: "userProfiles",
+      },
+    },
+    // Filter to only include connections where one of the user profiles
+    // matches the search term in fullName or email
+    ...(searchTerm
+      ? [
+          {
+            $match: {
+              userProfiles: {
+                $elemMatch: {
+                  $or: [
+                    { fullName: { $regex: searchTerm, $options: "i" } },
+                    { email: { $regex: searchTerm, $options: "i" } },
+                  ],
+                  user: { $ne: new mongoose.Types.ObjectId(userId) },
+                },
+              },
+            },
+          },
+        ]
+      : []),
+    // Get the count for pagination before applying skip and limit
+    {
+      $facet: {
+        metadata: [{ $count: "totalItem" }],
+        data: [
+          { $skip: skip },
+          { $limit: limit },
+          // Include the populated user data in the results
+          {
+            $lookup: {
+              from: "userprofiles",
+              localField: "users",
+              foreignField: "user",
+              as: "users",
+            },
+          },
+        ],
+      },
+    },
+  ];
+
+  const results = await UserConnection.aggregate(pipeline);
+
+  // Format the response with pagination metadata
+  const totalItem = results[0]?.metadata[0]?.totalItem || 0;
+  const totalPage = Math.ceil(totalItem / limit);
+
+  return {
+    meta: {
+      totalItem,
+      totalPage,
+      limit: Number(limit),
+      page: Number(page),
+    },
+    data: results[0].data,
+  };
 };
 
 const removeFriend = async (userIds: string[]) => {

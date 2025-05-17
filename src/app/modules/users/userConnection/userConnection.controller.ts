@@ -45,7 +45,27 @@ const requestlist = catchAsync(async (req, res) => {
 
 const friendList = catchAsync(async (req, res) => {
   const userId = req.user.userId;
-  const result = await UserConnectionService.friendList(userId);
+  const { search, page, limit } = req.query;
+
+  const searchTerm =
+    typeof search === "string"
+      ? search
+      : Array.isArray(search)
+      ? search[0]
+      : undefined;
+
+  const safeSearchTerm: string | undefined =
+    typeof searchTerm === "string"
+      ? searchTerm
+      : searchTerm !== undefined
+      ? String(searchTerm)
+      : undefined;
+
+  const result = await UserConnectionService.friendList(userId, {
+    searchTerm: safeSearchTerm,
+    page: Number(page) || 1,
+    limit: Number(limit) || 20,
+  });
 
   sendResponse(res, {
     success: true,
