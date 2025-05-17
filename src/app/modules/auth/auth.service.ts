@@ -154,7 +154,7 @@ const forgotPasswordRequest = async (
   await sendEmail(
     user.email,
     "Reset Password Verification Code",
-    `Your code is: ${otp}`
+    `Your OTP code is: ${otp} This code valid for only 5 minutes`
   );
 
   await User.findOneAndUpdate(
@@ -318,7 +318,11 @@ const reSendOtp = async (userEmail: string) => {
     throw new AppError(500, "Failed to Send. Try Again!");
   }
 
-  await sendEmail(userEmail, "Verification Code", `CODE: ${OTP}`);
+  await sendEmail(
+    userEmail,
+    "Account Verification Code",
+    `Your OTP code is: ${OTP} This code valid for only 5 minutes`
+  );
   return { message: "Verification Code Send" };
 };
 

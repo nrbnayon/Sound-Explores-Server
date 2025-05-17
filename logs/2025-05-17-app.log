@@ -12,3 +12,81 @@
 {"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 19:34:33"}
 {"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 19:34:34"}
 {"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 19:34:34"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 19:35:43"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 19:35:44"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 19:35:44"}
+{"headers":{"Content-Range":"bytes */0"},"level":"error","message":"Range Not Satisfiable","service":"your-service-name","stack":"RangeNotSatisfiableError: Range Not Satisfiable\n    at createHttpError (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:983:7)\n    at SendStream.error (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:270:31)\n    at SendStream.send (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:665:19)\n    at onstat (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:724:10)\n    at FSReqCallback.oncomplete (node:fs:198:5)","timestamp":"2025-05-17 22:55:41"}
+{"headers":{"Content-Range":"bytes */0"},"level":"error","message":"Range Not Satisfiable","service":"your-service-name","stack":"RangeNotSatisfiableError: Range Not Satisfiable\n    at createHttpError (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:983:7)\n    at SendStream.error (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:270:31)\n    at SendStream.send (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:665:19)\n    at onstat (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:724:10)\n    at FSReqCallback.oncomplete (node:fs:198:5)","timestamp":"2025-05-17 22:56:38"}
+{"headers":{"Content-Range":"bytes */0"},"level":"error","message":"Range Not Satisfiable","service":"your-service-name","stack":"RangeNotSatisfiableError: Range Not Satisfiable\n    at createHttpError (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:983:7)\n    at SendStream.error (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:270:31)\n    at SendStream.send (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:665:19)\n    at onstat (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:724:10)\n    at FSReqCallback.oncomplete (node:fs:198:5)","timestamp":"2025-05-17 22:56:38"}
+{"headers":{"Content-Range":"bytes */0"},"level":"error","message":"Range Not Satisfiable","service":"your-service-name","stack":"RangeNotSatisfiableError: Range Not Satisfiable\n    at createHttpError (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:983:7)\n    at SendStream.error (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:270:31)\n    at SendStream.send (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:665:19)\n    at onstat (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:724:10)\n    at FSReqCallback.oncomplete (node:fs:198:5)","timestamp":"2025-05-17 22:56:59"}
+{"headers":{"Content-Range":"bytes */0"},"level":"error","message":"Range Not Satisfiable","service":"your-service-name","stack":"RangeNotSatisfiableError: Range Not Satisfiable\n    at createHttpError (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:983:7)\n    at SendStream.error (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:270:31)\n    at SendStream.send (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:665:19)\n    at onstat (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:724:10)\n    at FSReqCallback.oncomplete (node:fs:198:5)","timestamp":"2025-05-17 22:56:59"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 22:58:34"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 22:58:35"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 22:58:35"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 22:58:40"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 22:58:41"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 22:58:41"}
+{"headers":{"Content-Range":"bytes */0"},"level":"error","message":"Range Not Satisfiable","service":"your-service-name","stack":"RangeNotSatisfiableError: Range Not Satisfiable\n    at createHttpError (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:983:7)\n    at SendStream.error (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:270:31)\n    at SendStream.send (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:665:19)\n    at onstat (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:724:10)\n    at FSReqCallback.oncomplete (node:fs:198:5)","timestamp":"2025-05-17 23:00:40"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:09:15"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:09:16"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:09:16"}
+{"headers":{"Content-Range":"bytes */0"},"level":"error","message":"Range Not Satisfiable","service":"your-service-name","stack":"RangeNotSatisfiableError: Range Not Satisfiable\n    at createHttpError (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:983:7)\n    at SendStream.error (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:270:31)\n    at SendStream.send (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:665:19)\n    at onstat (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:724:10)\n    at FSReqCallback.oncomplete (node:fs:198:5)","timestamp":"2025-05-17 23:10:12"}
+{"headers":{"Content-Range":"bytes */0"},"level":"error","message":"Range Not Satisfiable","service":"your-service-name","stack":"RangeNotSatisfiableError: Range Not Satisfiable\n    at createHttpError (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:983:7)\n    at SendStream.error (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:270:31)\n    at SendStream.send (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:665:19)\n    at onstat (E:\\JVAI\\Sound\\Sound-Explores-Server\\node_modules\\send\\index.js:724:10)\n    at FSReqCallback.oncomplete (node:fs:198:5)","timestamp":"2025-05-17 23:10:12"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:15:50"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:15:51"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:15:52"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:18:52"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:18:53"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:18:53"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:19:06"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:19:07"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:19:07"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:19:19"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:19:20"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:19:20"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:25:43"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:25:43"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:25:44"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:25:47"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:25:50"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:25:51"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:25:51"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:25:59"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:26:00"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:26:00"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:26:16"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:26:17"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:26:19"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:26:37"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:26:38"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:26:38"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:26:48"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:26:48"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:26:49"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:26:52"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:26:53"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:26:53"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:26:56"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:26:57"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:26:57"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:27:15"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:27:15"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:27:15"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:27:18"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:27:20"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:27:20"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:27:29"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:27:30"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:27:30"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:29:08"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:29:09"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:29:09"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:29:28"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:29:29"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:29:29"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:29:37"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:29:37"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:29:38"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-17 23:29:44"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-17 23:29:45"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-17 23:29:45"}
