@@ -74,12 +74,6 @@ const acceptRequest = catchAsync(async (req, res) => {
   const receiverId = req.user.userId;
   const connectionID = req.body.connectionID;
 
-  console.log(
-    "Accept::",
-    { connectionID: connectionID, receiverId: receiverId },
-    req.body
-  );
-
   // Call the service with correct parameters
   const result = await UserConnectionService.acceptRequest(
     connectionID,
@@ -99,12 +93,6 @@ const rejectRequest = catchAsync(async (req, res) => {
   const receiverId = req.user.userId;
   const connectionID = req.body.connectionID;
 
-  console.log(
-    "Reject::",
-    { connectionID: connectionID, receiverId: receiverId },
-    req.body
-  );
-
   // Call the service with correct parameters
   const result = await UserConnectionService.rejectRequest(
     connectionID,
@@ -120,25 +108,18 @@ const rejectRequest = catchAsync(async (req, res) => {
 });
 
 const cancelRequest = catchAsync(async (req, res) => {
-  const senderId = req.user.userId;
+  const userId = req.user.userId;
   const connectionID = req.body.connectionID;
-
-  console.log(
-    "Cancel::",
-    { senderId: senderId, connectionID: connectionID },
-    req.body
-  );
-
   // Call the service with correct parameters
   const result = await UserConnectionService.cancelRequest(
     connectionID,
-    senderId
+    userId
   );
 
   sendResponse(res, {
     success: true,
     statusCode: status.OK,
-    message: "Friend request canceled successfully",
+    message: "Connection canceled successfully",
     data: result,
   });
 });

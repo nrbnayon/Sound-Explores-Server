@@ -126,7 +126,11 @@ const acceptRequest = async (
   }
 
   // Verify the receiver is part of this connection
-  if (!connection.users.map((id: string | { toString(): string }) => id.toString()).includes(receiverId)) {
+  if (
+    !connection.users
+      .map((id: string | { toString(): string }) => id.toString())
+      .includes(receiverId)
+  ) {
     throw new AppError(
       status.BAD_REQUEST,
       "You are not authorized to accept this request"
@@ -169,7 +173,11 @@ const rejectRequest = async (
   }
 
   // Verify the receiver is part of this connection
-  if (!connection.users.map((id: string | { toString(): string }) => id.toString()).includes(receiverId)) {
+  if (
+    !connection.users
+      .map((id: string | { toString(): string }) => id.toString())
+      .includes(receiverId)
+  ) {
     throw new AppError(
       status.BAD_REQUEST,
       "You are not authorized to reject this request"
@@ -184,7 +192,7 @@ const rejectRequest = async (
     );
   }
 
-  // Verify the request is pending 
+  // Verify the request is pending
   if (connection.status !== "PENDING") {
     throw new AppError(status.BAD_REQUEST, "This request is no longer pending");
   }
@@ -194,15 +202,15 @@ const rejectRequest = async (
   return connection;
 };
 
-// Update the cancelRequest service function
+// UPDATED cancelRequest service function to allow both users to cancel
 interface CancelRequestParams {
   connectionID: string;
-  senderId: string;
+  userId: string;
 }
 
 const cancelRequest = async (
   connectionID: CancelRequestParams["connectionID"],
-  senderId: CancelRequestParams["senderId"]
+  userId: CancelRequestParams["userId"]
 ): Promise<InstanceType<typeof UserConnection> | null> => {
   // Find the connection by its MongoDB _id
   const connection = await UserConnection.findById(connectionID);
@@ -211,19 +219,25 @@ const cancelRequest = async (
     throw new AppError(status.NOT_FOUND, "Friend request not found");
   }
 
-  // Verify the sender is the one who sent the request
-  if (connection.senderId.toString() !== senderId) {
+  // Verify the user is part of this connection
+  if (
+    !connection.users
+      .map((id: string | { toString(): string }) => id.toString())
+      .includes(userId)
+  ) {
     throw new AppError(
       status.BAD_REQUEST,
-      "You can only cancel requests you've sent"
+      "You are not part of this connection"
     );
   }
 
-  // Verify the request is pending or accepted
+  // Allow cancellation if it's PENDING or ACCEPTED
   if (connection.status !== "PENDING" && connection.status !== "ACCEPTED") {
-    throw new AppError(status.BAD_REQUEST, "This request is no longer pending");
+    throw new AppError(
+      status.BAD_REQUEST,
+      "This connection cannot be canceled"
+    );
   }
-  
 
   connection.status = "REMOVED";
   await connection.save();
