@@ -1,14 +1,14 @@
-// Updated sendMessage.service.ts
 import mongoose from "mongoose";
 import User from "../users/user/user.model";
-import { sendBulkSMS } from "../../utils/twilio/twilio.sms";
+import { sendSMS } from "../../utils/twilio/twilio.sms";
 import { UserProfile } from "../users/userProfile/userProfile.model";
 import logger from "../../utils/logger";
 
 const sendMessage = async (
   users: string | string[],
   link: string,
-  senderEmail: string
+  senderEmail: string,
+  soundTitle?: string
 ): Promise<{
   success: boolean;
   successCount?: number;
@@ -53,6 +53,7 @@ const sendMessage = async (
     throw new Error("No valid user IDs provided");
   }
 
+  // Add projection to include user's full name
   const usersData = await User.aggregate([
     {
       $match: { _id: { $in: objectIds } },
@@ -75,6 +76,12 @@ const sendMessage = async (
       $match: { "userProfile.0": { $exists: true } },
     },
     { $unwind: "$userProfile" },
+    {
+      $project: {
+        "userProfile.phone": 1,
+        "userProfile.fullName": 1,
+      },
+    },
   ]);
 
   if (!usersData || usersData.length === 0) {
@@ -88,33 +95,57 @@ const sendMessage = async (
   interface AggregatedUser {
     userProfile: {
       phone: string;
+      fullName?: string;
     };
   }
 
-  const validPhoneNumbers = usersData
+  // Extract recipients with their phone numbers and names
+  const recipients = usersData
     .filter(
       (user: AggregatedUser) => user.userProfile && user.userProfile.phone
     )
-    .map((user: AggregatedUser) => user.userProfile.phone)
-    .filter((phone: string) => phone && phone.trim().length > 0);
+    .map((user: AggregatedUser) => ({
+      phone: user.userProfile.phone,
+      fullName: user.userProfile.fullName || "My friend",
+    }))
+    .filter(
+      (recipient) => recipient.phone && recipient.phone.trim().length > 0
+    );
 
-  if (validPhoneNumbers.length === 0) {
+  if (recipients.length === 0) {
     return { success: false, message: "No valid phone numbers found" };
   }
 
-  // Send SMS to all valid numbers
-  const { successCount, failedNumbers } = await sendBulkSMS(
-    validPhoneNumbers,
-    senderData?.fullName,
-    "hi, my friend",
-    link
-  );
+  // Create a personalized greeting message base
+  const customMessageBase = "I've shared an audio you might enjoy";
+
+  let successCount = 0;
+  const failedNumbers: string[] = [];
+
+  // Send personalized SMS to each recipient
+  for (const recipient of recipients) {
+    const personalizedMessage = `Hi, ${recipient.fullName}\n${customMessageBase}`;
+
+    try {
+      await sendSMS(
+        recipient.phone,
+        senderData.fullName,
+        personalizedMessage,
+        link,
+        soundTitle
+      );
+      successCount++;
+    } catch (error) {
+      failedNumbers.push(recipient.phone);
+      logger.error(`Failed to send SMS to ${recipient.phone}: ${error}`);
+    }
+  }
 
   return {
     success: true,
     successCount,
     failedCount: failedNumbers.length,
-    totalRecipients: validPhoneNumbers.length,
+    totalRecipients: recipients.length,
   };
 };
 

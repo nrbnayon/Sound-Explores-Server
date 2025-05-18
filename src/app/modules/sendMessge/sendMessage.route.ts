@@ -5,6 +5,6 @@ import { SendMessageController } from "./sendMessage.controller";
 
 const router = Router();
 
-router.post("/send-message", auth("USER"), SendMessageController.sendMessage);
+router.post("/send-sound", auth("USER"), SendMessageController.sendMessage);
 
 export const SendMessageRoute = router;

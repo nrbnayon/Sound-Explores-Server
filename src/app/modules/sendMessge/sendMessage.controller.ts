@@ -4,10 +4,14 @@ import sendResponse from "../../utils/sendResponse";
 import { SendMessageService } from "./sendMessage.service";
 
 const sendMessage = catchAsync(async (req, res) => {
+  // Extract all needed parameters from request body
+  const { users, link, soundTitle } = req.body;
+
   const result = await SendMessageService.sendMessage(
-    req.body.users,
-    req.body.link,
-    req.user.userEmail
+    users,
+    link,
+    req.user.userEmail,
+    soundTitle
   );
 
   sendResponse(res, {

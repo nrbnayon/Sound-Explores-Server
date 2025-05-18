@@ -11,18 +11,22 @@ const client = twilio(accountSid, authToken);
 export const generateSMSBody = (
   sender: string,
   message: string,
-  link: string
+  link: string,
+  soundTitle?: string
 ): string => {
-  return `${sender}\n\n${message}\n\nCheck this sound\n\nLink: ${link}`;
+  // Include sound title in the message if provided
+  const titleText = soundTitle ? `"${soundTitle}"` : "this sound";
+  return `From: ${sender}\n\n${message}\n\nCheck out ${titleText}\n\nLink: ${link}`;
 };
 
 export const sendSMS = async (
   to: string,
   senderName: string,
   message: string,
-  link: string
+  link: string,
+  soundTitle?: string
 ): Promise<void> => {
-  const body = generateSMSBody(senderName, message, link);
+  const body = generateSMSBody(senderName, message, link, soundTitle);
   await client.messages.create({
     body,
     from,
@@ -34,9 +38,10 @@ export const sendBulkSMS = async (
   recipients: string[],
   senderName: string,
   message: string,
-  link: string
+  link: string,
+  soundTitle?: string
 ): Promise<{ successCount: number; failedNumbers: string[] }> => {
-  const body = generateSMSBody(senderName, message, link);
+  const body = generateSMSBody(senderName, message, link, soundTitle);
   const failedNumbers: string[] = [];
   let successCount = 0;
 
@@ -46,7 +51,6 @@ export const sendBulkSMS = async (
     const batch = recipients.slice(i, i + batchSize);
 
     const batchPromises = batch.map((to) => {
-      console.log({ body, from, to, accountSid, authToken });
       return client.messages
         .create({ body, from, to })
         .then(() => successCount++)
