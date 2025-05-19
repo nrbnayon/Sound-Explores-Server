@@ -53,3 +53,7 @@
 {"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-18 00:58:05"}
 {"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-18 00:58:05"}
 {"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-18 00:58:05"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-05-18 01:24:03"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-05-18 01:24:04"}
+{"level":"info","message":"Example app listening on port 4500 & ip:127.0.0.1","service":"your-service-name","timestamp":"2025-05-18 01:24:04"}
+{"level":"info","message":"Uploading:image/png","service":"your-service-name","timestamp":"2025-05-18 02:43:58"}
