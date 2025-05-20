@@ -64,7 +64,15 @@ const resetPassword = (0, catchAsync_1.default)((req, res, next) => __awaiter(vo
     });
 }));
 const getNewAccessToken = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const refreshToken = req.cookies.refreshToken;
+    var _a, _b, _c, _d;
+    // Try to get the refresh token from multiple sources
+    const refreshToken = ((_a = req.cookies) === null || _a === void 0 ? void 0 : _a.refreshToken) ||
+        ((_b = req.body) === null || _b === void 0 ? void 0 : _b.refreshToken) ||
+        ((_c = req.query) === null || _c === void 0 ? void 0 : _c.refreshToken) ||
+        (((_d = req.headers.authorization) === null || _d === void 0 ? void 0 : _d.startsWith("Bearer "))
+            ? req.headers.authorization.split(" ")[1]
+            : null);
+    // console.log("RefT::", refreshToken);
     const result = yield auth_service_1.AuthService.getNewAccessToken(refreshToken);
     (0, sendResponse_1.default)(res, {
         data: result,
@@ -83,6 +91,16 @@ const updatePassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
         message: "Password successfully updated",
     });
 }));
+const reSendOtp = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email } = req.body;
+    const result = yield auth_service_1.AuthService.reSendOtp(email);
+    (0, sendResponse_1.default)(res, {
+        data: result,
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Verification Code send successfully",
+    });
+}));
 exports.AuthController = {
     verifyUser,
     forgotPasswordRequest,
@@ -90,4 +108,5 @@ exports.AuthController = {
     userLogin,
     getNewAccessToken,
     updatePassword,
+    reSendOtp,
 };

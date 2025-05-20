@@ -23,7 +23,7 @@ export async function sendEmail(email: string, subject: string, text: string) {
 
     // Check if this is an OTP-related email
     const isOtpEmail =
-      subject.includes("Verification Code") ||
+      subject.includes("Email Verification Code") ||
       subject.includes("Reset Password");
 
     // Create appropriate HTML content based on email type

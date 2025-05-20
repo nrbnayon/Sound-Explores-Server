@@ -16,7 +16,6 @@ exports.globalErrorHandler = void 0;
 const AppError_1 = __importDefault(require("../errors/AppError"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const zodErrorHandler_1 = require("../errors/zodErrorHandler");
-const mongooseErrorHandler_1 = require("../errors/mongooseErrorHandler");
 const zod_1 = require("zod");
 const multer_1 = __importDefault(require("multer"));
 const MulterErrorHandler_1 = __importDefault(require("../errors/MulterErrorHandler"));
@@ -25,17 +24,41 @@ const globalErrorHandler = (err, req, res, next) => __awaiter(void 0, void 0, vo
     let statusCode = err.statusCode || 500;
     let message = err.message || "Something went wrong!";
     let errors = [];
-    if (err instanceof mongoose_1.default.Error) {
-        const mongooseError = (0, mongooseErrorHandler_1.handleMongooseError)(err);
-        statusCode = mongooseError.statusCode;
-        message = mongooseError.message;
-        errors = mongooseError.errors;
+    if (err instanceof mongoose_1.default.Error.ValidationError) {
+        statusCode = 400;
+        message = "Validation failed";
+        errors = Object.values(err.errors).map((error) => ({
+            field: error.path,
+            message: error.message,
+        }));
+    }
+    else if (err.code === 11000) {
+        statusCode = 400;
+        message = `${Object.keys(err.keyValue).join(", ")} already exist`;
+        errors = [
+            {
+                field: "",
+                message: `Duplicate key error: ${Object.keys(err.keyValue).join(", ")}`,
+            },
+        ];
+    }
+    else if (err instanceof mongoose_1.default.Error.CastError) {
+        statusCode = 400;
+        message = `Invalid value for ${err.path}`;
+        errors = [
+            {
+                field: err.path,
+                message: `Invalid value for ${err.path}`,
+            },
+        ];
     }
     else if ((err === null || err === void 0 ? void 0 : err.name) === "ValidationError") {
-        const mongooseError = (0, mongooseErrorHandler_1.handleMongooseError)(err);
-        statusCode = mongooseError.statusCode;
-        message = mongooseError.message;
-        errors = mongooseError.errors;
+        statusCode = 400;
+        message = "Validation failed";
+        errors = Object.values(err.errors).map((error) => ({
+            field: error.path,
+            message: error.message,
+        }));
     }
     else if (err instanceof zod_1.ZodError) {
         const zodError = (0, zodErrorHandler_1.handleZodError)(err);
@@ -78,7 +101,7 @@ const globalErrorHandler = (err, req, res, next) => __awaiter(void 0, void 0, vo
             },
         ];
     }
-    logger_1.default.error(message);
+    logger_1.default.error(err);
     res.status(statusCode).json(Object.assign({ success: false, status: statusCode, message, errors: errors.length ? errors : undefined }, (process.env.NODE_ENV === "development" && { stack: err.stack })));
 });
 exports.globalErrorHandler = globalErrorHandler;

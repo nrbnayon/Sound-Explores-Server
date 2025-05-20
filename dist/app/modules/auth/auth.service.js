@@ -68,12 +68,13 @@ const verifyUser = (email, otp) => __awaiter(void 0, void 0, void 0, function* (
     let updatedUser;
     let token = null;
     if (user.user.isVerified) {
+        console.log("gg");
         token = jwt_1.jsonWebToken.generateToken({ userEmail: user.email }, config_1.appConfig.jwt.jwt_access_secret, "10m");
         const expDate = (0, getExpiryTime_1.default)(10);
         updatedUser = yield user_model_1.default.findOneAndUpdate({ email: user.email }, {
             "authentication.otp": null,
             "authentication.expDate": expDate,
-            "authentication.needToResetPass": true,
+            needToResetPass: true,
             "authentication.token": token,
         }, { new: true });
     }
@@ -105,7 +106,7 @@ const forgotPasswordRequest = (email) => __awaiter(void 0, void 0, void 0, funct
         needToResetPass: false,
         token: null,
     };
-    yield (0, sendEmail_1.sendEmail)(user.email, "Reset Password Verification Code", `Your code is: ${otp}`);
+    yield (0, sendEmail_1.sendEmail)(user.email, "Reset Password Verification Code", `Your OTP code is: ${otp} This code valid for only 5 minutes`);
     yield user_model_1.default.findOneAndUpdate({ email }, { authentication: data }, { new: true });
     return { email: user.email };
 });
@@ -130,7 +131,8 @@ const resetPassword = (token, userData) => __awaiter(void 0, void 0, void 0, fun
     const hassedPassword = yield (0, getHashedPassword_1.default)(new_password);
     const updateData = yield user_model_1.default.findOneAndUpdate({ email: decode.userEmail }, {
         password: hassedPassword,
-        authentication: { opt: null, token: null, expDate: null },
+        authentication: { otp: null, token: null, expDate: null },
+        needToResetPass: false,
     }, { new: true });
     if (!updateData) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to reset password. Try again.");
@@ -177,6 +179,20 @@ const updatePassword = (userId, passData) => __awaiter(void 0, void 0, void 0, f
     yield user.save();
     return { user: user.email, message: "Password successfully updated." };
 });
+const reSendOtp = (userEmail) => __awaiter(void 0, void 0, void 0, function* () {
+    const OTP = (0, getOtp_1.default)(4);
+    const updateUser = yield user_model_1.default.findOneAndUpdate({ email: userEmail }, {
+        $set: {
+            "authentication.otp": OTP,
+            "authentication.expDate": new Date(Date.now() + 10 * 60 * 1000), //10min
+        },
+    }, { new: true });
+    if (!updateUser) {
+        throw new AppError_1.default(500, "Failed to Send. Try Again!");
+    }
+    yield (0, sendEmail_1.sendEmail)(userEmail, "Account Verification Code", `Your OTP code is: ${OTP} This code valid for only 5 minutes`);
+    return { message: "Verification Code Send" };
+});
 exports.AuthService = {
     userLogin,
     verifyUser,
@@ -184,4 +200,5 @@ exports.AuthService = {
     resetPassword,
     getNewAccessToken,
     updatePassword,
+    reSendOtp,
 };

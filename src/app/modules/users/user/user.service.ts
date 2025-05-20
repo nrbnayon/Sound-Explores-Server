@@ -31,7 +31,6 @@ const createUser = async (data: {
   if (!phoneNumber || !phoneNumber.isValid()) {
     throw new Error("Invalid phone number");
   }
-
   const normalizedPhone = phoneNumber.number;
   //user data
   const userData = {
@@ -53,7 +52,7 @@ const createUser = async (data: {
   await sendEmail(
     data.email,
     "Email Verification Code",
-    `Your code is: ${otp}`
+    `Your OTP code is: ${otp}`
   );
   return { email: createdUser.email, isVerified: createdUser.isVerified };
 };

@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "D:\\Nayon xD\\Projects\\Sound Explores\\Sound-Explore-Library\\logs\\.477ae73017f00a80c692be275cf5be68d78ab910-audit.json",
+    "files": [
+        {
+            "date": 1747704489566,
+            "name": "D:\\Nayon xD\\Projects\\Sound Explores\\Sound-Explore-Library\\logs\\2025-05-20-rejections.log",
+            "hash": "cc9accad9a6f17170d3f19409360f721cd0710d5de65a1f145eceaa05bd454ce"
+        }
+    ],
+    "hashType": "sha256"
+}

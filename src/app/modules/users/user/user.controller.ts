@@ -7,7 +7,6 @@ import logger from "../../../utils/logger";
 const createUser = catchAsync(async (req, res) => {
   const userData = req.body;
 
-  logger.info("New User", userData);
   const result = await UserService.createUser(userData);
 
   sendResponse(res, {

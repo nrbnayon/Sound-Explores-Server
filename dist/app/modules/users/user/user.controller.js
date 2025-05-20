@@ -23,14 +23,30 @@ const createUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: "User successfully created. Check your email for code.",
+        message: "Account successfully created. Check your email for code.",
+        data: result,
+    });
+}));
+const getAllUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const currentUserId = req.user.userId;
+    const { search, page, limit } = req.query;
+    const result = yield user_service_1.UserService.getAllUser({
+        searchTerm: search,
+        page: Number(page),
+        limit: Number(limit),
+        excludeUserId: currentUserId,
+    });
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "All user successfully fetched.",
         data: result,
     });
 }));
 const updateProfileImage = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const filePath = (_a = req.file) === null || _a === void 0 ? void 0 : _a.path;
-    const result = yield user_service_1.UserService.updateProfileImage(filePath);
+    const result = yield user_service_1.UserService.updateProfileImage(filePath, req.user.userEmail);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
@@ -38,4 +54,29 @@ const updateProfileImage = (0, catchAsync_1.default)((req, res) => __awaiter(voi
         data: result,
     });
 }));
-exports.UserController = { createUser, updateProfileImage };
+const updateProfileData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userData = req.body;
+    const result = yield user_service_1.UserService.updateProfileData(userData, req.user.userEmail);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Profile info updated successfully.",
+        data: result,
+    });
+}));
+const getMe = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_service_1.UserService.getMe(req.user.userId);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "User data is fetched successfully.",
+        data: result,
+    });
+}));
+exports.UserController = {
+    getMe,
+    createUser,
+    getAllUser,
+    updateProfileImage,
+    updateProfileData,
+};

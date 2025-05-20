@@ -17,6 +17,8 @@ const config_1 = require("../config");
 const auth_interface_1 = require("../interface/auth.interface");
 const adminProfile_model_1 = require("../modules/users/adminProfile/adminProfile.model");
 const user_model_1 = __importDefault(require("../modules/users/user/user.model"));
+const logger_1 = __importDefault(require("../utils/logger"));
+const getHashedPassword_1 = __importDefault(require("../utils/helper/getHashedPassword"));
 const superUser = {
     role: auth_interface_1.userRoles.ADMIN,
     email: config_1.appConfig.admin.email,
@@ -28,9 +30,11 @@ const superUserProfile = {
     email: config_1.appConfig.admin.email,
 };
 const seedAdmin = () => __awaiter(void 0, void 0, void 0, function* () {
-    const session = yield mongoose_1.default.startSession();
-    session.startTransaction();
+    let session;
     try {
+        session = yield mongoose_1.default.startSession();
+        session.startTransaction();
+        superUser.password = yield (0, getHashedPassword_1.default)(superUser.password);
         const isExistSuperAdmin = yield user_model_1.default.findOne({
             role: auth_interface_1.userRoles.ADMIN,
         }).session(session);
@@ -39,15 +43,28 @@ const seedAdmin = () => __awaiter(void 0, void 0, void 0, function* () {
             yield adminProfile_model_1.AdminProfile.create([Object.assign(Object.assign({}, superUserProfile), { user: data[0]._id })], {
                 session,
             });
+            logger_1.default.info("Admin Created");
+        }
+        else {
+            logger_1.default.info("Admin already created");
         }
         yield session.commitTransaction();
     }
     catch (error) {
-        yield session.abortTransaction();
-        throw error; // or handle the error as needed
+        logger_1.default.error(error);
+        if (session) {
+            try {
+                yield session.abortTransaction();
+            }
+            catch (abortError) {
+                logger_1.default.error("Error aborting transaction:", abortError);
+            }
+        }
     }
     finally {
-        session.endSession();
+        if (session) {
+            session.endSession();
+        }
     }
 });
 exports.default = seedAdmin;

@@ -18,28 +18,35 @@ const http_status_1 = __importDefault(require("http-status"));
 const jwt_1 = require("../../utils/jwt/jwt");
 const config_1 = require("../../config");
 const user_model_1 = __importDefault(require("../../modules/users/user/user.model"));
+const logger_1 = __importDefault(require("../../utils/logger"));
 const auth = (...userRole) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const tokenWithBearer = req.headers.authorization;
-    if (!tokenWithBearer || !tokenWithBearer.startsWith("Bearer")) {
-        return next(new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You are not authorized"));
+    try {
+        const tokenWithBearer = req.headers.authorization;
+        if (!tokenWithBearer || !tokenWithBearer.startsWith("Bearer")) {
+            return next(new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You are not authorized"));
+        }
+        const token = tokenWithBearer.split(" ")[1];
+        if (token === "null") {
+            return next(new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You are not authorized"));
+        }
+        const decodedData = jwt_1.jsonWebToken.verifyJwt(token, config_1.appConfig.jwt.jwt_access_secret);
+        const userData = yield user_model_1.default.findById(decodedData.userId);
+        if (!userData) {
+            return next(new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You are not authorized"));
+        }
+        if (userRole.length && !userRole.includes(decodedData.userRole)) {
+            return next(new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You are not authorized"));
+        }
+        if (userData.role !== decodedData.userRole ||
+            userData.email !== decodedData.userEmail) {
+            return next(new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You are not authorized"));
+        }
+        req.user = decodedData;
+        return next();
     }
-    const token = tokenWithBearer.split(" ")[1];
-    if (token === "null") {
-        return next(new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You are not authorized"));
+    catch (error) {
+        logger_1.default.error("Error:", error);
+        return next(new AppError_1.default(http_status_1.default.UNAUTHORIZED, "Invalid or expired token"));
     }
-    const decodedData = jwt_1.jsonWebToken.verifyJwt(token, config_1.appConfig.jwt.jwt_access_secret);
-    const userData = yield user_model_1.default.findById(decodedData.userId);
-    if (!userData) {
-        return next(new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You are not authorized"));
-    }
-    if (userRole.length && !userRole.includes(decodedData.userRole)) {
-        return next(new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You are not authorized"));
-    }
-    if (userData.role !== decodedData.userRole ||
-        userData.email !== decodedData.userEmail) {
-        return next(new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You are not authorized"));
-    }
-    req.user = decodedData;
-    return next();
 });
 exports.auth = auth;
