@@ -11,7 +11,12 @@ import logger from "./app/utils/logger";
 const app = express();
 
 const corsOption = {
-  origin: ["http://localhost:5173", "http://192.168.10.12:5173"],
+  origin: [
+    "http://localhost:5173",
+    "http://192.168.10.12:5173",
+    "http://31.97.15.225:3000",
+    "http://31.97.15.225:5173",
+  ],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials: true,
 };
