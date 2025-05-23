@@ -16,6 +16,7 @@ const corsOption = {
     "http://192.168.10.12:5173",
     "http://31.97.15.225:3000",
     "http://31.97.15.225:5173",
+    "http://31.97.15.225:4500",
     "poopalert.fun",
     "www.poopalert.fun",
     "www.poopalert.fun",
