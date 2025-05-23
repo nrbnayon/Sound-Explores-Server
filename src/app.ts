@@ -16,6 +16,12 @@ const corsOption = {
     "http://192.168.10.12:5173",
     "http://31.97.15.225:3000",
     "http://31.97.15.225:5173",
+    "poopalert.fun",
+    "www.poopalert.fun",
+    "www.poopalert.fun",
+    "https://poopalert.fun",
+    "api.poopalert.fun",
+    "https://api.poopalert.fun"
   ],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials: true,
