@@ -4,24 +4,26 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { AuthService } from "./auth.service";
 import { appConfig } from "../../config";
-import logger from "../../utils/logger";
 
 const userLogin = catchAsync(async (req, res, next) => {
   const result = await AuthService.userLogin(req.body);
 
+  // Set refresh token cookie with long expiration (1 year)
   res.cookie("refreshToken", result.refreshToken, {
     secure: appConfig.server.node_env === "production",
     httpOnly: true,
+    maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year in milliseconds
+    sameSite: "strict",
+    path: "/",
   });
 
   sendResponse(res, {
     success: true,
     statusCode: status.OK,
-    message: "User login successfull",
+    message: "User login successfully",
     data: result,
   });
 });
-
 const verifyUser = catchAsync(async (req, res, next) => {
   const { email, otp } = req.body;
   const result = await AuthService.verifyUser(email, Number(otp));

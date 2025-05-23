@@ -12,7 +12,11 @@ router.post(
 );
 router.get("/sent-list", auth("USER"), UserConnectionController.sentlist);
 router.get("/request-list", auth("USER"), UserConnectionController.requestlist);
-router.get("/friend-list", auth("USER"), UserConnectionController.friendList);
+router.get(
+  "/friend-list",
+  auth("USER", "ADMIN"),
+  UserConnectionController.friendList
+);
 router.patch(
   "/remove-friend",
   auth("USER"),
