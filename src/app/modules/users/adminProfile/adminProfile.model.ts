@@ -1,3 +1,4 @@
+// src\app\modules\users\adminProfile\adminProfile.model.ts
 import { Schema, model } from "mongoose";
 import { IAdminProfile } from "./adminProfile.interface";
 

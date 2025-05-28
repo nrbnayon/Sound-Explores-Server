@@ -1,3 +1,4 @@
+// src\app\modules\users\user\user.route.ts
 import { Router } from "express";
 import { UserController } from "./user.controller";
 
@@ -29,5 +30,7 @@ router.patch(
   auth("ADMIN", "USER"),
   UserController.updateProfileData
 );
+
+router.patch("/delete-user", auth("ADMIN"), UserController.deleteUser);
 
 export const UserRoute = router;

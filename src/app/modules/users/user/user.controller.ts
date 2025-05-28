@@ -2,7 +2,6 @@ import status from "http-status";
 import catchAsync from "../../../utils/catchAsync";
 import sendResponse from "../../../utils/sendResponse";
 import { UserService } from "./user.service";
-import logger from "../../../utils/logger";
 
 const createUser = catchAsync(async (req, res) => {
   const userData = req.body;
@@ -75,10 +74,51 @@ const getMe = catchAsync(async (req, res) => {
   });
 });
 
+const deleteUser = catchAsync(async (req, res) => {
+  const { userRole, userId: currentAdminId } = req.user;
+  const { userId: targetUserId } = req.body;
+
+  // Check if user is admin
+  if (userRole !== "ADMIN") {
+    return sendResponse(res, {
+      success: false,
+      statusCode: status.FORBIDDEN,
+      message: "Access denied. Only admins can delete users.",
+    });
+  }
+
+  // Check if targetUserId is provided
+  if (!targetUserId) {
+    return sendResponse(res, {
+      success: false,
+      statusCode: status.BAD_REQUEST,
+      message: "Target user not found.",
+    });
+  }
+
+  // Prevent admin from deleting themselves
+  if (targetUserId === currentAdminId) {
+    return sendResponse(res, {
+      success: false,
+      statusCode: status.BAD_REQUEST,
+      message: "You cannot delete your own account.",
+    });
+  }
+  const result = await UserService.deleteUserIntoDB(targetUserId);
+  return sendResponse(res, {
+    success: true,
+    statusCode: status.OK,
+    message: "User deleted successfully from all collections.",
+    data: result,
+  });
+});
+
+
 export const UserController = {
   getMe,
   createUser,
   getAllUser,
   updateProfileImage,
   updateProfileData,
+  deleteUser,
 };

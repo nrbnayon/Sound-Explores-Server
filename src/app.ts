@@ -21,6 +21,7 @@ const corsOption = {
     "www.poopalert.fun",
     "www.poopalert.fun",
     "https://poopalert.fun",
+    "https://www.poopalert.fun",
     "api.poopalert.fun",
     "https://api.poopalert.fun"
   ],

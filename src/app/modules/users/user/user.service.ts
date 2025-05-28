@@ -1,3 +1,4 @@
+// src\app\modules\users\user\user.service.ts
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { IUserProfile } from "./../userProfile/userProfile.interface";
@@ -17,6 +18,7 @@ import { IAdminProfile } from "../adminProfile/adminProfile.interface";
 import { removeFalsyFields } from "../../../utils/helper/removeFalsyField";
 import mongoose from "mongoose";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
+import { UserConnection } from "../userConnection/userConnection.model";
 
 const createUser = async (data: {
   email: string;
@@ -205,38 +207,6 @@ const updateProfileData = async (
   return updated;
 };
 
-// const getMe = async (userId: string) => {
-//   const userWithProfile = await User.aggregate([
-//     {
-//       $match: { _id: new mongoose.Types.ObjectId(userId) }, // Match the user by userId
-//     },
-//     {
-//       $lookup: {
-//         from: "userprofiles", // Name of the UserProfile collection
-//         localField: "_id", // The field from the User collection to join on
-//         foreignField: "user", // The field in the UserProfile collection that references User
-//         as: "profile", // The alias for the joined data
-//       },
-//     },
-//     {
-//       $unwind: "$profile", // Unwind the profile array (because $lookup returns an array)
-//     },
-//     {
-//       $project: {
-//         email: 1, // Include the fields you want from User
-//         role: 1,
-//         profile: 1, // Include the profile data
-//       },
-//     },
-//   ]);
-
-//   if (userWithProfile.length === 0) {
-//     throw new Error("User not found");
-//   }
-
-//   return userWithProfile[0]; //
-// };
-
 const getMe = async (userId: string) => {
   const user = await User.findById(userId);
 
@@ -286,10 +256,95 @@ const getMe = async (userId: string) => {
   return userWithProfile[0];
 };
 
+const deleteUserIntoDB = async (targetUserId: string) => {
+  if (!targetUserId) {
+    throw new AppError(status.BAD_REQUEST, "User ID is required");
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(targetUserId)) {
+    throw new AppError(status.BAD_REQUEST, "Invalid user ID format");
+  }
+
+  const session = await mongoose.startSession();
+  let deletedUser: any = null;
+
+  try {
+    await session.withTransaction(async () => {
+      const userExists = await User.findById(targetUserId).session(session);
+      if (!userExists) {
+        throw new AppError(status.NOT_FOUND, "User not found");
+      }
+
+      // Store user info before deletion
+      deletedUser = {
+        _id: userExists._id,
+        email: userExists.email,
+        role: userExists.role,
+      };
+
+      // Delete from UserProfile collection (if exists)
+      const deletedProfile = await UserProfile.findOneAndDelete({
+        user: targetUserId,
+      }).session(session);
+
+      // Delete from AdminProfile collection (if exists)
+      const deletedAdminProfile = await AdminProfile.findOneAndDelete({
+        user: targetUserId,
+      }).session(session);
+
+      // Delete all user connections where this user is involved (if any)
+      const deletedConnections = await UserConnection.deleteMany({
+        $or: [{ users: targetUserId }, { senderId: targetUserId }],
+      }).session(session);
+
+      // Finally, delete the user from Users collection
+      const userDeleted = await User.findByIdAndDelete(targetUserId).session(
+        session
+      );
+
+      if (!userDeleted) {
+        throw new AppError(
+          status.INTERNAL_SERVER_ERROR,
+          "Failed to delete user from database"
+        );
+      }
+
+      console.log(`Deletion Summary for User ${targetUserId}:`);
+      console.log(
+        `- User Profile: ${deletedProfile ? "Deleted" : "Not found"}`
+      );
+      console.log(
+        `- Admin Profile: ${deletedAdminProfile ? "Deleted" : "Not found"}`
+      );
+      console.log(
+        `- User Connections: ${deletedConnections.deletedCount} deleted`
+      );
+    });
+    return {
+      message: "User and all related data deleted successfully",
+      deletedUserId: targetUserId,
+      email: deletedUser.email,
+      deletedAt: new Date(),
+    };
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new AppError(
+      status.INTERNAL_SERVER_ERROR,
+      "An error occurred while deleting the user"
+    );
+  } finally {
+    await session.endSession();
+  }
+};
+
+
 export const UserService = {
   getMe,
   createUser,
   updateProfileImage,
   updateProfileData,
   getAllUser,
+  deleteUserIntoDB
 };

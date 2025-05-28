@@ -1,3 +1,4 @@
+// src\app\modules\users\userProfile\userProfile.model.ts
 import { Schema, model } from "mongoose";
 import { IUserProfile } from "./userProfile.interface";
 
