@@ -93,7 +93,6 @@ const verifyUser = async (
   let updatedUser;
   let token = null;
   if (user.user.isVerified) {
-    console.log("gg");
     token = jsonWebToken.generateToken(
       { userEmail: user.email },
       appConfig.jwt.jwt_access_secret as string,

@@ -13,6 +13,7 @@ const app = express();
 const corsOption = {
   origin: [
     "http://localhost:5173",
+    "http://localhost:3000",
     "http://192.168.10.12:5173",
     "http://31.97.15.225:3000",
     "http://31.97.15.225:5173",
@@ -23,7 +24,7 @@ const corsOption = {
     "https://poopalert.fun",
     "https://www.poopalert.fun",
     "api.poopalert.fun",
-    "https://api.poopalert.fun"
+    "https://api.poopalert.fun",
   ],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials: true,

@@ -19,6 +19,7 @@ import { removeFalsyFields } from "../../../utils/helper/removeFalsyField";
 import mongoose from "mongoose";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { UserConnection } from "../userConnection/userConnection.model";
+import logger from "../../../utils/logger";
 
 const createUser = async (data: {
   email: string;
@@ -312,14 +313,14 @@ const deleteUserIntoDB = async (targetUserId: string) => {
         );
       }
 
-      console.log(`Deletion Summary for User ${targetUserId}:`);
-      console.log(
+      logger.info(`Deletion Summary for User ${targetUserId}:`);
+      logger.info(
         `- User Profile: ${deletedProfile ? "Deleted" : "Not found"}`
       );
-      console.log(
+      logger.info(
         `- Admin Profile: ${deletedAdminProfile ? "Deleted" : "Not found"}`
       );
-      console.log(
+      logger.info(
         `- User Connections: ${deletedConnections.deletedCount} deleted`
       );
     });

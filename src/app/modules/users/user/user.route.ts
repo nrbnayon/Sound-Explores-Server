@@ -31,6 +31,6 @@ router.patch(
   UserController.updateProfileData
 );
 
-router.post("/delete-user", auth("ADMIN"), UserController.deleteUser);
+router.delete("/delete-user", auth("ADMIN"), UserController.deleteUser);
 
 export const UserRoute = router;
