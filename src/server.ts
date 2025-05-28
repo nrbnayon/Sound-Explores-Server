@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 
 import server from "./app";
 import { appConfig } from "./app/config";
@@ -13,24 +12,42 @@ process.on("uncaughtException", (err) => {
 
 process.on("unhandledRejection", (err) => {
   logger.error("Unhandled promise rejection:", err);
-
   process.exit(1);
 });
 
 const main = async () => {
-  await mongoose.connect(appConfig.database.dataBase_uri as string);
-  logger.info("MongoDB connected");
-await seedAdmin();
-  server.listen(
-    Number(appConfig.server.port),
-    appConfig.server.ip as string,
-    () => {
-      logger.info(
-        `Example app listening on port ${appConfig.server.port} & ip:${
-          appConfig.server.ip as string
-        }`
-      );
-    }
-  );
+  try {
+    // Connect to MongoDB
+    await mongoose.connect(appConfig.database.dataBase_uri as string);
+    logger.info("MongoDB connected");
+
+    // Seed admin data
+    await seedAdmin();
+    logger.info("Admin seeding completed");
+
+    // Start the server
+    server.listen(
+      Number(appConfig.server.port),
+      appConfig.server.ip as string,
+      () => {
+        // Enhanced console output with proper formatting
+        logger.info(`
+╔═════════════════════════════════════╗
+║  🚀 Server launched successfully!   ║
+║  🌐 Running on: ${appConfig.server.ip}:${appConfig.server
+          .port!.toString()
+          .padStart(4, " ")}      ║
+╚═════════════════════════════════════╝`);
+      }
+    );
+  } catch (error) {
+    logger.error("Failed to start server:", error);
+    process.exit(1);
+  }
 };
-main().catch((err) => logger.error("Error connecting to MongoDB:", err));
+
+// Call the main function and handle any unhandled promise rejections
+main().catch((error) => {
+  logger.error("Unhandled error in main function:", error);
+  process.exit(1);
+});

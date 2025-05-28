@@ -108,11 +108,10 @@ const deleteUser = catchAsync(async (req, res) => {
   return sendResponse(res, {
     success: true,
     statusCode: status.OK,
-    message: "User deleted successfully from all collections.",
+    message: "User deleted successfully.",
     data: result,
   });
 });
-
 
 export const UserController = {
   getMe,

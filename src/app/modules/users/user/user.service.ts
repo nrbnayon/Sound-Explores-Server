@@ -272,7 +272,10 @@ const deleteUserIntoDB = async (targetUserId: string) => {
     await session.withTransaction(async () => {
       const userExists = await User.findById(targetUserId).session(session);
       if (!userExists) {
-        throw new AppError(status.NOT_FOUND, "User not found");
+        throw new AppError(
+          status.NOT_FOUND,
+          "User not found or already deleted"
+        );
       }
 
       // Store user info before deletion
@@ -321,7 +324,7 @@ const deleteUserIntoDB = async (targetUserId: string) => {
       );
     });
     return {
-      message: "User and all related data deleted successfully",
+      message: "User deleted successfully",
       deletedUserId: targetUserId,
       email: deletedUser.email,
       deletedAt: new Date(),
@@ -339,12 +342,11 @@ const deleteUserIntoDB = async (targetUserId: string) => {
   }
 };
 
-
 export const UserService = {
   getMe,
   createUser,
   updateProfileImage,
   updateProfileData,
   getAllUser,
-  deleteUserIntoDB
+  deleteUserIntoDB,
 };
