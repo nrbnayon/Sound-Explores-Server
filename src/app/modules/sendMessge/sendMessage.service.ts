@@ -23,7 +23,7 @@ const sendMessage = async (
 
   // Validate input parameters
   if (!userArray || userArray.length === 0) {
-    throw new Error("Invalid or empty users array");
+    throw new Error("You have no friend yet to send this message");
   }
 
   if (!link) {
