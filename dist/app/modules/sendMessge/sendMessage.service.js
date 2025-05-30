@@ -25,7 +25,7 @@ const sendMessage = (users, link, senderEmail, soundTitle) => __awaiter(void 0, 
     const userArray = Array.isArray(users) ? users : [users];
     // Validate input parameters
     if (!userArray || userArray.length === 0) {
-        throw new Error("Invalid or empty users array");
+        throw new Error("You have no friend yet to send this message");
     }
     if (!link) {
         throw new Error("Link is required");
