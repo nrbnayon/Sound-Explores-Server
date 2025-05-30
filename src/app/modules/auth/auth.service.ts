@@ -30,7 +30,7 @@ const userLogin = async (loginData: {
   const isPassMatch = await userData.comparePassword(loginData.password);
 
   if (!isPassMatch) {
-    throw new AppError(status.BAD_REQUEST, "Please check your password.");
+    throw new AppError(status.BAD_REQUEST, "Incorrect password.");
   }
 
   const jwtPayload = {
@@ -299,7 +299,7 @@ const updatePassword = async (
   return { user: user.email, message: "Password successfully updated." };
 };
 
-const reSendOtp = async (userEmail: string) => {
+const reSendOtp = async (userEmail: string): Promise<{ message: string }> => {
   const OTP = getOtp(4);
 
   const updateUser = await User.findOneAndUpdate(

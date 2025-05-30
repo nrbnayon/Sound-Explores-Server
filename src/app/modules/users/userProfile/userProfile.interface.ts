@@ -5,7 +5,6 @@ export interface IUserProfile {
   nickname?: string;
   dateOfBirth?: Date;
   email: string;
-  phone?: string;
   address?: string;
   image?: string;
   user: Types.ObjectId;

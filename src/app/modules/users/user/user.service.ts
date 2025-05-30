@@ -5,59 +5,83 @@ import { IUserProfile } from "./../userProfile/userProfile.interface";
 import status from "http-status";
 import AppError from "../../../errors/AppError";
 import { getRelativePath } from "../../../middleware/fileUpload/getRelativeFilePath";
-import getExpiryTime from "../../../utils/helper/getExpiryTime";
 import getHashedPassword from "../../../utils/helper/getHashedPassword";
-import getOtp from "../../../utils/helper/getOtp";
-import { sendEmail } from "../../../utils/sendEmail";
 import { UserProfile } from "../userProfile/userProfile.model";
-
 import { IUser } from "./user.interface";
 import User from "./user.model";
 import { AdminProfile } from "../adminProfile/adminProfile.model";
 import { IAdminProfile } from "../adminProfile/adminProfile.interface";
 import { removeFalsyFields } from "../../../utils/helper/removeFalsyField";
 import mongoose from "mongoose";
-import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { UserConnection } from "../userConnection/userConnection.model";
 import logger from "../../../utils/logger";
+import { jsonWebToken } from "../../../utils/jwt/jwt";
+import { appConfig } from "../../../config";
 
 const createUser = async (data: {
   email: string;
-  fullName: string;
-  phone: string;
   password: string;
-}): Promise<Partial<IUser>> => {
-  const hashedPassword = await getHashedPassword(data.password);
-  const otp = getOtp(4);
-  const expDate = getExpiryTime(10);
-  const phoneNumber = parsePhoneNumberFromString(data.phone);
-  if (!phoneNumber || !phoneNumber.isValid()) {
-    throw new Error("Invalid phone number");
+}): Promise<
+  Partial<IUser> & {
+    accessToken: string;
+    refreshToken: string;
+    userData: any;
   }
-  const normalizedPhone = phoneNumber.number;
-  //user data
-  const userData = {
+> => {
+  const isUserExist = await User.findOne({ email: data.email }).select(
+    "+password"
+  );
+  const hashedPassword = await getHashedPassword(data.password);
+
+  if (isUserExist) {
+    throw new AppError(status.BAD_REQUEST, "This email already registered.");
+  }
+
+  const userData: any = {
     email: data.email,
-    phone: normalizedPhone,
     password: hashedPassword,
-    authentication: { otp, expDate },
+    isVerified: true,
   };
+
   const createdUser = await User.create(userData);
+
+  if (!createdUser) {
+    throw new AppError(status.INTERNAL_SERVER_ERROR, "Failed to create user.");
+  }
 
   //user profile data
   const userProfileData = {
-    fullName: data.fullName,
     email: createdUser.email,
-    phone: normalizedPhone,
     user: createdUser._id,
   };
   await UserProfile.create(userProfileData);
-  await sendEmail(
-    data.email,
-    "Email Verification Code",
-    `Your OTP code is: ${otp}`
+
+  const jwtPayload = {
+    userEmail: userData.email,
+    userId: createdUser._id,
+    userRole: createdUser.role,
+  };
+
+  const accessToken = jsonWebToken.generateToken(
+    jwtPayload,
+    appConfig.jwt.jwt_access_secret as string,
+    appConfig.jwt.jwt_access_exprire
   );
-  return { email: createdUser.email, isVerified: createdUser.isVerified };
+
+  const refreshToken = jsonWebToken.generateToken(
+    jwtPayload,
+    appConfig.jwt.jwt_refresh_secret as string,
+    appConfig.jwt.jwt_refresh_exprire
+  );
+
+  return {
+    accessToken,
+    refreshToken,
+    userData: {
+      ...userProfileData,
+      password: null,
+    },
+  };
 };
 
 const getAllUser = async (queries: {
@@ -121,7 +145,6 @@ const getAllUser = async (queries: {
         $or: [
           { "profile.fullName": { $regex: searchTerm, $options: "i" } },
           { "profile.email": { $regex: searchTerm, $options: "i" } },
-          { "profile.phone": { $regex: searchTerm, $options: "i" } },
         ],
       },
     });
@@ -193,13 +216,6 @@ const updateProfileData = async (
     updated = await UserProfile.findOneAndUpdate({ email: email }, data, {
       new: true,
     });
-    if (data.phone) {
-      await User.findOneAndUpdate(
-        { email: email },
-        { phone: data.phone },
-        { new: true }
-      );
-    }
   }
   if (!updated) {
     throw new AppError(status.BAD_REQUEST, "Failed to update user info.");
@@ -244,7 +260,6 @@ const getMe = async (userId: string) => {
         isVerified: 1,
         name: "$profile.fullName",
         profile: 1,
-        phone: 1,
         // Can't mix inclusion (1) and exclusion (0) in the same $project
       },
     },

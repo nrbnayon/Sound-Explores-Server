@@ -2,16 +2,26 @@ import status from "http-status";
 import catchAsync from "../../../utils/catchAsync";
 import sendResponse from "../../../utils/sendResponse";
 import { UserService } from "./user.service";
+import { appConfig } from "../../../config";
 
 const createUser = catchAsync(async (req, res) => {
   const userData = req.body;
 
   const result = await UserService.createUser(userData);
 
+  // Set refresh token cookie with long expiration (1 year)
+  res.cookie("refreshToken", result.refreshToken, {
+    secure: appConfig.server.node_env === "production",
+    httpOnly: true,
+    maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year in milliseconds
+    sameSite: "strict",
+    path: "/",
+  });
+
   sendResponse(res, {
     success: true,
     statusCode: status.OK,
-    message: "Account successfully created. Check your email for code.",
+    message: "Account successfully created.",
     data: result,
   });
 });

@@ -14,6 +14,7 @@ const corsOption = {
   origin: [
     "http://localhost:5173",
     "http://localhost:3000",
+    "http://192.168.10.12:3000",
     "http://192.168.10.12:5173",
     "http://31.97.15.225:3000",
     "http://31.97.15.225:5173",

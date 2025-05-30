@@ -4,12 +4,10 @@ import { userRole } from "../../../interface/auth.interface";
 
 import bcrypt from "bcryptjs";
 const userSchema = new Schema<IUser>({
-  
   email: { type: String, required: true, unique: true },
-  phone: { type: String, required: true, unique: true },
   password: { type: String, required: true, select: false },
   role: { type: String, enum: userRole, default: "USER" },
-  agreeToTerms: {type: Boolean},
+  agreeToTerms: { type: Boolean },
   authentication: {
     expDate: { type: Date, default: null },
     otp: { type: Number, default: null },
