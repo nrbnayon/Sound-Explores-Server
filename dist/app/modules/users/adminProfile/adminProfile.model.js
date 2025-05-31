@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminProfile = void 0;
+// src\app\modules\users\adminProfile\adminProfile.model.ts
 const mongoose_1 = require("mongoose");
 const adminProfileSchema = new mongoose_1.Schema({
     fullName: { type: String },

@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserProfile = void 0;
+// src\app\modules\users\userProfile\userProfile.model.ts
 const mongoose_1 = require("mongoose");
 const userProfileSchema = new mongoose_1.Schema({
     fullName: { type: String },
     nickname: { type: String },
     dateOfBirth: { type: Date },
     email: { type: String, unique: true },
-    phone: { type: String },
     address: { type: String },
     image: { type: String },
     user: { type: mongoose_1.Schema.Types.ObjectId, ref: "User", unique: true },

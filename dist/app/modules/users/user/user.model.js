@@ -17,7 +17,6 @@ const auth_interface_1 = require("../../../interface/auth.interface");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const userSchema = new mongoose_1.Schema({
     email: { type: String, required: true, unique: true },
-    phone: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
     role: { type: String, enum: auth_interface_1.userRole, default: "USER" },
     agreeToTerms: { type: Boolean },

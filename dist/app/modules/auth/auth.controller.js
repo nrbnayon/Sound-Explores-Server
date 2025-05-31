@@ -21,14 +21,18 @@ const auth_service_1 = require("./auth.service");
 const config_1 = require("../../config");
 const userLogin = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_service_1.AuthService.userLogin(req.body);
+    // Set refresh token cookie with long expiration (1 year)
     res.cookie("refreshToken", result.refreshToken, {
         secure: config_1.appConfig.server.node_env === "production",
         httpOnly: true,
+        maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year in milliseconds
+        sameSite: "strict",
+        path: "/",
     });
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: "User login successfull",
+        message: "User login successfully",
         data: result,
     });
 }));

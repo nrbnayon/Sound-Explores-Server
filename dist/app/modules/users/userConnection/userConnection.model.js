@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserConnection = void 0;
+// src\app\modules\users\userConnection\userConnection.model.ts
 const mongoose_1 = require("mongoose");
 const userConnection_interface_1 = require("./userConnection.interface");
 const UserConnectionSchema = new mongoose_1.Schema({

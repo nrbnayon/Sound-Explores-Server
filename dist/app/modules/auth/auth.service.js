@@ -34,7 +34,7 @@ const userLogin = (loginData) => __awaiter(void 0, void 0, void 0, function* () 
     }
     const isPassMatch = yield userData.comparePassword(loginData.password);
     if (!isPassMatch) {
-        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Please check your password.");
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Incorrect password.");
     }
     const jwtPayload = {
         userEmail: userData.email,
@@ -68,7 +68,6 @@ const verifyUser = (email, otp) => __awaiter(void 0, void 0, void 0, function* (
     let updatedUser;
     let token = null;
     if (user.user.isVerified) {
-        console.log("gg");
         token = jwt_1.jsonWebToken.generateToken({ userEmail: user.email }, config_1.appConfig.jwt.jwt_access_secret, "10m");
         const expDate = (0, getExpiryTime_1.default)(10);
         updatedUser = yield user_model_1.default.findOneAndUpdate({ email: user.email }, {

@@ -116,7 +116,7 @@ const sendMessage = async (
   const recipients = userRecords
     .map((user) => {
       const profile = profileMap.get(user._id.toString());
-      const phone = profile?.phone || user.phone;
+      const phone = profile?.phone || "";
       const fullName = profile?.fullName || "My friend";
 
       return {
@@ -125,7 +125,7 @@ const sendMessage = async (
       };
     })
     .filter(
-      (recipient) => recipient.phone && recipient.phone.trim().length > 0
+      (recipient) => recipient?.phone && recipient.phone.trim().length > 0
     );
 
   if (recipients.length === 0) {
@@ -144,7 +144,7 @@ const sendMessage = async (
 
     try {
       await sendSMS(
-        recipient.phone,
+        recipient?.phone,
         senderData.fullName,
         personalizedMessage,
         link,
@@ -152,8 +152,8 @@ const sendMessage = async (
       );
       successCount++;
     } catch (error) {
-      failedNumbers.push(recipient.phone);
-      logger.error(`Failed to send SMS to ${recipient.phone}: ${error}`);
+      failedNumbers.push(recipient?.phone);
+      logger.error(`Failed to send SMS to ${recipient?.phone}: ${error}`);
     }
   }
 
@@ -254,7 +254,7 @@ const sendSoundToAllFriends = async (
     { $unwind: "$userProfile" },
     {
       $project: {
-        "userProfile.phone": 1,
+        "userProfile?.phone": 1,
         "userProfile.fullName": 1,
       },
     },
@@ -277,14 +277,14 @@ const sendSoundToAllFriends = async (
   // Extract recipients with their phone numbers and names
   const recipients = usersData
     .filter(
-      (user: AggregatedUser) => user.userProfile && user.userProfile.phone
+      (user: AggregatedUser) => user.userProfile && user?.userProfile?.phone
     )
     .map((user: AggregatedUser) => ({
-      phone: user.userProfile.phone,
+      phone: user.userProfile?.phone,
       fullName: user.userProfile.fullName || "My friend",
     }))
     .filter(
-      (recipient) => recipient.phone && recipient.phone.trim().length > 0
+      (recipient) => recipient?.phone && recipient?.phone.trim().length > 0
     );
 
   if (recipients.length === 0) {
@@ -314,8 +314,8 @@ const sendSoundToAllFriends = async (
       );
       successCount++;
     } catch (error) {
-      failedNumbers.push(recipient.phone);
-      logger.error(`Failed to send SMS to ${recipient.phone}: ${error}`);
+      failedNumbers.push(recipient?.phone);
+      logger.error(`Failed to send SMS to ${recipient?.phone}: ${error}`);
     }
   }
 

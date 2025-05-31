@@ -17,13 +17,22 @@ const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../../utils/sendResponse"));
 const user_service_1 = require("./user.service");
+const config_1 = require("../../../config");
 const createUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userData = req.body;
     const result = yield user_service_1.UserService.createUser(userData);
+    // Set refresh token cookie with long expiration (1 year)
+    res.cookie("refreshToken", result.refreshToken, {
+        secure: config_1.appConfig.server.node_env === "production",
+        httpOnly: true,
+        maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year in milliseconds
+        sameSite: "strict",
+        path: "/",
+    });
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: "Account successfully created. Check your email for code.",
+        message: "Account successfully created.",
         data: result,
     });
 }));
@@ -73,10 +82,46 @@ const getMe = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, 
         data: result,
     });
 }));
+const deleteUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userRole, userId: currentAdminId } = req.user;
+    const { userId: targetUserId } = req.body;
+    // Check if user is admin
+    if (userRole !== "ADMIN") {
+        return (0, sendResponse_1.default)(res, {
+            success: false,
+            statusCode: http_status_1.default.FORBIDDEN,
+            message: "Access denied. Only admins can delete users.",
+        });
+    }
+    // Check if targetUserId is provided
+    if (!targetUserId) {
+        return (0, sendResponse_1.default)(res, {
+            success: false,
+            statusCode: http_status_1.default.BAD_REQUEST,
+            message: "Target user not found.",
+        });
+    }
+    // Prevent admin from deleting themselves
+    if (targetUserId === currentAdminId) {
+        return (0, sendResponse_1.default)(res, {
+            success: false,
+            statusCode: http_status_1.default.BAD_REQUEST,
+            message: "You cannot delete your own account.",
+        });
+    }
+    const result = yield user_service_1.UserService.deleteUserIntoDB(targetUserId);
+    return (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "User deleted successfully.",
+        data: result,
+    });
+}));
 exports.UserController = {
     getMe,
     createUser,
     getAllUser,
     updateProfileImage,
     updateProfileData,
+    deleteUser,
 };

@@ -9,7 +9,7 @@ const router = (0, express_1.Router)();
 router.post("/send-request", (0, auth_1.auth)("USER"), userConnection_controller_1.UserConnectionController.sendRequest);
 router.get("/sent-list", (0, auth_1.auth)("USER"), userConnection_controller_1.UserConnectionController.sentlist);
 router.get("/request-list", (0, auth_1.auth)("USER"), userConnection_controller_1.UserConnectionController.requestlist);
-router.get("/friend-list", (0, auth_1.auth)("USER"), userConnection_controller_1.UserConnectionController.friendList);
+router.get("/friend-list", (0, auth_1.auth)("USER", "ADMIN"), userConnection_controller_1.UserConnectionController.friendList);
 router.patch("/remove-friend", (0, auth_1.auth)("USER"), userConnection_controller_1.UserConnectionController.removeFriend);
 // New routes for the missing endpoints
 router.patch("/accept-request", (0, auth_1.auth)("USER"), userConnection_controller_1.UserConnectionController.acceptRequest);

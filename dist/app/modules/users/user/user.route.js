@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRoute = void 0;
+// src\app\modules\users\user\user.route.ts
 const express_1 = require("express");
 const user_controller_1 = require("./user.controller");
 const user_validation_1 = require("./user.validation");
@@ -16,4 +17,5 @@ router.get("/get-all-user", (0, auth_1.auth)("ADMIN", "USER"), user_controller_1
 router.post("/create-user", (0, zodValidator_1.default)(user_validation_1.zodCreateUserSchema), user_controller_1.UserController.createUser);
 router.patch("/update-profile-image", (0, auth_1.auth)("ADMIN", "USER"), fileUploadHandler_1.upload.single("file"), user_controller_1.UserController.updateProfileImage);
 router.patch("/update-profile-data", (0, auth_1.auth)("ADMIN", "USER"), user_controller_1.UserController.updateProfileData);
+router.delete("/delete-user", (0, auth_1.auth)("ADMIN"), user_controller_1.UserController.deleteUser);
 exports.UserRoute = router;

@@ -16,43 +16,49 @@ exports.UserService = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const AppError_1 = __importDefault(require("../../../errors/AppError"));
 const getRelativeFilePath_1 = require("../../../middleware/fileUpload/getRelativeFilePath");
-const getExpiryTime_1 = __importDefault(require("../../../utils/helper/getExpiryTime"));
 const getHashedPassword_1 = __importDefault(require("../../../utils/helper/getHashedPassword"));
-const getOtp_1 = __importDefault(require("../../../utils/helper/getOtp"));
-const sendEmail_1 = require("../../../utils/sendEmail");
 const userProfile_model_1 = require("../userProfile/userProfile.model");
 const user_model_1 = __importDefault(require("./user.model"));
 const adminProfile_model_1 = require("../adminProfile/adminProfile.model");
 const removeFalsyField_1 = require("../../../utils/helper/removeFalsyField");
 const mongoose_1 = __importDefault(require("mongoose"));
-const libphonenumber_js_1 = require("libphonenumber-js");
+const userConnection_model_1 = require("../userConnection/userConnection.model");
+const logger_1 = __importDefault(require("../../../utils/logger"));
+const jwt_1 = require("../../../utils/jwt/jwt");
+const config_1 = require("../../../config");
 const createUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const isUserExist = yield user_model_1.default.findOne({ email: data.email }).select("+password");
     const hashedPassword = yield (0, getHashedPassword_1.default)(data.password);
-    const otp = (0, getOtp_1.default)(4);
-    const expDate = (0, getExpiryTime_1.default)(10);
-    const phoneNumber = (0, libphonenumber_js_1.parsePhoneNumberFromString)(data.phone);
-    if (!phoneNumber || !phoneNumber.isValid()) {
-        throw new Error("Invalid phone number");
+    if (isUserExist) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This email already registered.");
     }
-    const normalizedPhone = phoneNumber.number;
-    //user data
     const userData = {
         email: data.email,
-        phone: normalizedPhone,
         password: hashedPassword,
-        authentication: { otp, expDate },
+        isVerified: true,
     };
     const createdUser = yield user_model_1.default.create(userData);
+    if (!createdUser) {
+        throw new AppError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, "Failed to create user.");
+    }
     //user profile data
     const userProfileData = {
-        fullName: data.fullName,
         email: createdUser.email,
-        phone: normalizedPhone,
         user: createdUser._id,
     };
     yield userProfile_model_1.UserProfile.create(userProfileData);
-    yield (0, sendEmail_1.sendEmail)(data.email, "Email Verification Code", `Your OTP code is: ${otp}`);
-    return { email: createdUser.email, isVerified: createdUser.isVerified };
+    const jwtPayload = {
+        userEmail: userData.email,
+        userId: createdUser._id,
+        userRole: createdUser.role,
+    };
+    const accessToken = jwt_1.jsonWebToken.generateToken(jwtPayload, config_1.appConfig.jwt.jwt_access_secret, config_1.appConfig.jwt.jwt_access_exprire);
+    const refreshToken = jwt_1.jsonWebToken.generateToken(jwtPayload, config_1.appConfig.jwt.jwt_refresh_secret, config_1.appConfig.jwt.jwt_refresh_exprire);
+    return {
+        accessToken,
+        refreshToken,
+        userData: Object.assign(Object.assign({}, userProfileData), { password: null }),
+    };
 });
 const getAllUser = (queries) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
@@ -107,7 +113,6 @@ const getAllUser = (queries) => __awaiter(void 0, void 0, void 0, function* () {
                 $or: [
                     { "profile.fullName": { $regex: searchTerm, $options: "i" } },
                     { "profile.email": { $regex: searchTerm, $options: "i" } },
-                    { "profile.phone": { $regex: searchTerm, $options: "i" } },
                 ],
             },
         });
@@ -155,44 +160,12 @@ const updateProfileData = (userdata, email) => __awaiter(void 0, void 0, void 0,
         updated = yield userProfile_model_1.UserProfile.findOneAndUpdate({ email: email }, data, {
             new: true,
         });
-        if (data.phone) {
-            yield user_model_1.default.findOneAndUpdate({ email: email }, { phone: data.phone }, { new: true });
-        }
     }
     if (!updated) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to update user info.");
     }
     return updated;
 });
-// const getMe = async (userId: string) => {
-//   const userWithProfile = await User.aggregate([
-//     {
-//       $match: { _id: new mongoose.Types.ObjectId(userId) }, // Match the user by userId
-//     },
-//     {
-//       $lookup: {
-//         from: "userprofiles", // Name of the UserProfile collection
-//         localField: "_id", // The field from the User collection to join on
-//         foreignField: "user", // The field in the UserProfile collection that references User
-//         as: "profile", // The alias for the joined data
-//       },
-//     },
-//     {
-//       $unwind: "$profile", // Unwind the profile array (because $lookup returns an array)
-//     },
-//     {
-//       $project: {
-//         email: 1, // Include the fields you want from User
-//         role: 1,
-//         profile: 1, // Include the profile data
-//       },
-//     },
-//   ]);
-//   if (userWithProfile.length === 0) {
-//     throw new Error("User not found");
-//   }
-//   return userWithProfile[0]; //
-// };
 const getMe = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.default.findById(userId);
     if (!user) {
@@ -225,7 +198,6 @@ const getMe = (userId) => __awaiter(void 0, void 0, void 0, function* () {
                 isVerified: 1,
                 name: "$profile.fullName",
                 profile: 1,
-                phone: 1,
                 // Can't mix inclusion (1) and exclusion (0) in the same $project
             },
         },
@@ -235,10 +207,71 @@ const getMe = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     }
     return userWithProfile[0];
 });
+const deleteUserIntoDB = (targetUserId) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!targetUserId) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User ID is required");
+    }
+    if (!mongoose_1.default.Types.ObjectId.isValid(targetUserId)) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Invalid user ID format");
+    }
+    const session = yield mongoose_1.default.startSession();
+    let deletedUser = null;
+    try {
+        yield session.withTransaction(() => __awaiter(void 0, void 0, void 0, function* () {
+            const userExists = yield user_model_1.default.findById(targetUserId).session(session);
+            if (!userExists) {
+                throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found or already deleted");
+            }
+            // Store user info before deletion
+            deletedUser = {
+                _id: userExists._id,
+                email: userExists.email,
+                role: userExists.role,
+            };
+            // Delete from UserProfile collection (if exists)
+            const deletedProfile = yield userProfile_model_1.UserProfile.findOneAndDelete({
+                user: targetUserId,
+            }).session(session);
+            // Delete from AdminProfile collection (if exists)
+            const deletedAdminProfile = yield adminProfile_model_1.AdminProfile.findOneAndDelete({
+                user: targetUserId,
+            }).session(session);
+            // Delete all user connections where this user is involved (if any)
+            const deletedConnections = yield userConnection_model_1.UserConnection.deleteMany({
+                $or: [{ users: targetUserId }, { senderId: targetUserId }],
+            }).session(session);
+            // Finally, delete the user from Users collection
+            const userDeleted = yield user_model_1.default.findByIdAndDelete(targetUserId).session(session);
+            if (!userDeleted) {
+                throw new AppError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, "Failed to delete user from database");
+            }
+            logger_1.default.info(`Deletion Summary for User ${targetUserId}:`);
+            logger_1.default.info(`- User Profile: ${deletedProfile ? "Deleted" : "Not found"}`);
+            logger_1.default.info(`- Admin Profile: ${deletedAdminProfile ? "Deleted" : "Not found"}`);
+            logger_1.default.info(`- User Connections: ${deletedConnections.deletedCount} deleted`);
+        }));
+        return {
+            message: "User deleted successfully",
+            deletedUserId: targetUserId,
+            email: deletedUser.email,
+            deletedAt: new Date(),
+        };
+    }
+    catch (error) {
+        if (error instanceof AppError_1.default) {
+            throw error;
+        }
+        throw new AppError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, "An error occurred while deleting the user");
+    }
+    finally {
+        yield session.endSession();
+    }
+});
 exports.UserService = {
     getMe,
     createUser,
     updateProfileImage,
     updateProfileData,
     getAllUser,
+    deleteUserIntoDB,
 };

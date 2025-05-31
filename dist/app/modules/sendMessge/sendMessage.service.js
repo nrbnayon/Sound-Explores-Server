@@ -110,14 +110,14 @@ const sendMessage = (users, link, senderEmail, soundTitle) => __awaiter(void 0, 
     const recipients = userRecords
         .map((user) => {
         const profile = profileMap.get(user._id.toString());
-        const phone = (profile === null || profile === void 0 ? void 0 : profile.phone) || user.phone;
+        const phone = (profile === null || profile === void 0 ? void 0 : profile.phone) || "";
         const fullName = (profile === null || profile === void 0 ? void 0 : profile.fullName) || "My friend";
         return {
             phone,
             fullName,
         };
     })
-        .filter((recipient) => recipient.phone && recipient.phone.trim().length > 0);
+        .filter((recipient) => (recipient === null || recipient === void 0 ? void 0 : recipient.phone) && recipient.phone.trim().length > 0);
     if (recipients.length === 0) {
         return { success: false, message: "No valid phone numbers found" };
     }
@@ -129,12 +129,12 @@ const sendMessage = (users, link, senderEmail, soundTitle) => __awaiter(void 0, 
     for (const recipient of recipients) {
         const personalizedMessage = `Hi, ${recipient.fullName}\n${customMessageBase}`;
         try {
-            yield (0, twilio_sms_1.sendSMS)(recipient.phone, senderData.fullName, personalizedMessage, link, soundTitle);
+            yield (0, twilio_sms_1.sendSMS)(recipient === null || recipient === void 0 ? void 0 : recipient.phone, senderData.fullName, personalizedMessage, link, soundTitle);
             successCount++;
         }
         catch (error) {
-            failedNumbers.push(recipient.phone);
-            logger_1.default.error(`Failed to send SMS to ${recipient.phone}: ${error}`);
+            failedNumbers.push(recipient === null || recipient === void 0 ? void 0 : recipient.phone);
+            logger_1.default.error(`Failed to send SMS to ${recipient === null || recipient === void 0 ? void 0 : recipient.phone}: ${error}`);
         }
     }
     return {
@@ -208,7 +208,7 @@ const sendSoundToAllFriends = (userId, userEmail, soundLink, soundTitle) => __aw
         { $unwind: "$userProfile" },
         {
             $project: {
-                "userProfile.phone": 1,
+                "userProfile?.phone": 1,
                 "userProfile.fullName": 1,
             },
         },
@@ -221,12 +221,15 @@ const sendSoundToAllFriends = (userId, userEmail, soundLink, soundTitle) => __aw
     }
     // Extract recipients with their phone numbers and names
     const recipients = usersData
-        .filter((user) => user.userProfile && user.userProfile.phone)
-        .map((user) => ({
-        phone: user.userProfile.phone,
-        fullName: user.userProfile.fullName || "My friend",
-    }))
-        .filter((recipient) => recipient.phone && recipient.phone.trim().length > 0);
+        .filter((user) => { var _a; return user.userProfile && ((_a = user === null || user === void 0 ? void 0 : user.userProfile) === null || _a === void 0 ? void 0 : _a.phone); })
+        .map((user) => {
+        var _a;
+        return ({
+            phone: (_a = user.userProfile) === null || _a === void 0 ? void 0 : _a.phone,
+            fullName: user.userProfile.fullName || "My friend",
+        });
+    })
+        .filter((recipient) => (recipient === null || recipient === void 0 ? void 0 : recipient.phone) && (recipient === null || recipient === void 0 ? void 0 : recipient.phone.trim().length) > 0);
     if (recipients.length === 0) {
         return {
             success: false,
@@ -245,8 +248,8 @@ const sendSoundToAllFriends = (userId, userEmail, soundLink, soundTitle) => __aw
             successCount++;
         }
         catch (error) {
-            failedNumbers.push(recipient.phone);
-            logger_1.default.error(`Failed to send SMS to ${recipient.phone}: ${error}`);
+            failedNumbers.push(recipient === null || recipient === void 0 ? void 0 : recipient.phone);
+            logger_1.default.error(`Failed to send SMS to ${recipient === null || recipient === void 0 ? void 0 : recipient.phone}: ${error}`);
         }
     }
     return {
