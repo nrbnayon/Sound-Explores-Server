@@ -10,14 +10,12 @@ const superUser = {
   role: userRoles.ADMIN,
   email: appConfig.admin.email,
   password: appConfig.admin.password,
-  phone: appConfig.twilio.phoneNumber,
   isVerified: true,
 };
 
 const superUserProfile = {
   fullName: "Admin",
   email: appConfig.admin.email,
-  phone: appConfig.twilio.phoneNumber,
 };
 
 const seedAdmin = async (): Promise<void> => {
