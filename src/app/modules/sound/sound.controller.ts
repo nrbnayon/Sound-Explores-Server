@@ -32,8 +32,8 @@ const getAllSound = catchAsync(async (req, res) => {
     req.user.userId,
     searchTerm as string,
     category as string,
-    page ? parseInt(page as string, 10) : undefined,
-    limit ? parseInt(limit as string, 10) : undefined
+    page ? parseInt(page as string, 1000) : undefined,
+    limit ? parseInt(limit as string, 1000) : undefined
   );
 
   sendResponse(res, {

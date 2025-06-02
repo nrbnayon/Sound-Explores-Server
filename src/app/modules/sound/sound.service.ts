@@ -47,7 +47,7 @@ export const getAllSound = async (
 
   // Set up pagination
   const pageNumber = page || 1;
-  const limitNumber = limit || 20;
+  const limitNumber = limit || 1000;
   const skip = (pageNumber - 1) * limitNumber;
 
   // Get total count for pagination info
