@@ -8,6 +8,7 @@ import { noRouteFound } from "./app/utils/noRouteFound";
 import cookieParser from "cookie-parser";
 import path from "path";
 import logger from "./app/utils/logger";
+import { UserController } from "./app/modules/users/user/user.controller";
 const app = express();
 
 const corsOption = {
@@ -33,6 +34,13 @@ const corsOption = {
 
 app.use(cors(corsOption));
 app.use(cookieParser());
+
+// Webhook handler with raw body parsing - MUST be before other body parsers
+app.post(
+  "/my-webhook/stripe",
+  express.raw({ type: "application/json" }),
+  UserController.handleWebhook
+);
 
 // Fix: Parse both JSON and text/plain content types
 app.use(express.json());

@@ -15,6 +15,7 @@
   "dependencies": {
     "@eslint/js": "^9.22.0",
     "@types/multer": "^1.4.12",
+    "@types/stripe": "^8.0.416",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -29,6 +30,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.10.0",
+    "stripe": "^18.2.1",
     "ts-node-dev": "^2.0.0",
     "twilio": "^5.5.2",
     "typescript-eslint": "^8.26.1",

@@ -33,4 +33,14 @@ router.patch(
 
 router.delete("/delete-user", auth("ADMIN"), UserController.deleteUser);
 
+// Subscription routes
+router.post("/buy-subscription", auth("USER"), UserController.buySubscription);
+router.post("/cancel-subscription", auth("USER"), UserController.cancelSubscription);
+router.get("/subscription-status", auth("USER"), UserController.getSubscriptionStatus);
+router.post(
+  "/sync-subscription",
+  auth("USER"),
+  UserController.syncSubscriptionStatus
+);
+
 export const UserRoute = router;
