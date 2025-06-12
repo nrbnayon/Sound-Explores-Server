@@ -3,6 +3,7 @@ export interface IAuthData {
   userEmail: string;
   userId: string;
   userRole: TUserRole;
+  isSubscribed?: boolean;
 }
 
 export const userRoles = {

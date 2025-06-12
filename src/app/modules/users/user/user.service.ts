@@ -267,6 +267,8 @@ const getMe = async (userId: string) => {
         email: 1,
         role: 1,
         isVerified: 1,
+        isSubscribed: 1,
+        subscription: 1,
         name: "$profile.fullName",
         profile: 1,
         // Can't mix inclusion (1) and exclusion (0) in the same $project
@@ -896,27 +898,69 @@ const handleSubscriptionDeleted = async (
   subscription: Stripe.Subscription,
   session: mongoose.ClientSession
 ): Promise<void> => {
-  const customer = await stripe.customers.retrieve(
-    subscription.customer as string
-  );
+  try {
+    logger.info(`Processing subscription deletion: ${subscription.id}`);
 
-  if (!customer || customer.deleted) return;
+    const customer = await stripe.customers.retrieve(
+      subscription.customer as string
+    );
 
-  const userId = (customer as Stripe.Customer).metadata?.userId;
+    if (!customer || customer.deleted) {
+      logger.warn(
+        `Customer not found or deleted for subscription: ${subscription.id}`
+      );
+      return;
+    }
 
-  if (!userId) return;
+    const userId = (customer as Stripe.Customer).metadata?.userId;
 
-  await User.findByIdAndUpdate(
-    userId,
-    {
-      isSubscribed: false,
-      "subscription.status": "cancelled",
-      "subscription.autoRenew": false,
-    },
-    { session }
-  );
+    if (!userId) {
+      logger.warn(
+        `User ID not found in customer metadata for subscription: ${subscription.id}`
+      );
+      return;
+    }
 
-  logger.info(`Subscription deleted for user ${userId}`);
+    // Get current user state
+    const user = await User.findById(userId).session(session);
+    if (!user) {
+      logger.warn(`User not found in database: ${userId}`);
+      return;
+    }
+
+    // Update user subscription status
+    const updateResult = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          isSubscribed: false,
+          "subscription.status": "cancelled",
+          "subscription.autoRenew": false,
+          // Optionally set end date if not already set
+          ...(subscription.current_period_end && {
+            "subscription.endDate": new Date(
+              subscription.current_period_end * 1000
+            ),
+          }),
+        },
+      },
+      { session, new: true }
+    );
+
+    if (updateResult) {
+      logger.info(
+        `Successfully updated subscription status for user ${userId}: cancelled`
+      );
+    } else {
+      logger.error(`Failed to update subscription status for user ${userId}`);
+    }
+  } catch (error) {
+    logger.error(
+      `Error handling subscription deletion for ${subscription.id}:`,
+      error
+    );
+    throw error; // Re-throw to trigger transaction rollback
+  }
 };
 
 const handlePaymentFailed = async (invoice: Stripe.Invoice): Promise<void> => {
@@ -937,6 +981,93 @@ const handlePaymentFailed = async (invoice: Stripe.Invoice): Promise<void> => {
   });
 };
 
+const processExpiredSubscriptions = async (): Promise<void> => {
+  const session = await mongoose.startSession();
+
+  try {
+    await session.withTransaction(async () => {
+      const now = new Date();
+
+      // Find users with expired subscriptions
+      const expiredUsers = await User.find({
+        isSubscribed: true,
+        "subscription.endDate": { $lt: now },
+        "subscription.status": { $in: ["active", "cancelled"] },
+      }).session(session);
+
+      logger.info(
+        `Found ${expiredUsers.length} users with expired subscriptions`
+      );
+
+      for (const user of expiredUsers) {
+        if (user.subscription?.stripeSubscriptionId) {
+          try {
+            // Verify with Stripe
+            const stripeSubscription = await stripe.subscriptions.retrieve(
+              user.subscription.stripeSubscriptionId
+            );
+
+            // Only update if Stripe also shows it as ended
+            if (
+              ["canceled", "unpaid", "past_due"].includes(
+                stripeSubscription.status
+              )
+            ) {
+              await User.findByIdAndUpdate(
+                user._id,
+                {
+                  $set: {
+                    isSubscribed: false,
+                    "subscription.status": "expired",
+                  },
+                },
+                { session }
+              );
+
+              logger.info(
+                `Marked subscription as expired for user ${user._id}`
+              );
+            }
+          } catch (stripeError) {
+            logger.error(
+              `Error checking Stripe subscription for user ${user._id}:`,
+              stripeError
+            );
+            // If Stripe subscription not found, assume it's cancelled
+            await User.findByIdAndUpdate(
+              user._id,
+              {
+                $set: {
+                  isSubscribed: false,
+                  "subscription.status": "expired",
+                },
+              },
+              { session }
+            );
+          }
+        } else {
+          // No Stripe subscription ID, just mark as expired
+          await User.findByIdAndUpdate(
+            user._id,
+            {
+              $set: {
+                isSubscribed: false,
+                "subscription.status": "expired",
+              },
+            },
+            { session }
+          );
+        }
+      }
+    });
+  } catch (error) {
+    logger.error("Error processing expired subscriptions:", error);
+    throw error;
+  } finally {
+    await session.endSession();
+  }
+};
+
 export const UserService = {
   getMe,
   createUser,
@@ -949,4 +1080,5 @@ export const UserService = {
   getSubscriptionStatus,
   handleStripeWebhook,
   syncSubscriptionStatus,
+  processExpiredSubscriptions,
 };

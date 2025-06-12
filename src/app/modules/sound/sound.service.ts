@@ -12,7 +12,8 @@ export const getAllSound = async (
   searchTerm?: string,
   category?: string,
   page?: number,
-  limit?: number
+  limit?: number,
+  showAllSounds?: boolean 
 ): Promise<{
   data: ISound[];
   pagination: {
@@ -30,8 +31,9 @@ export const getAllSound = async (
     category?: string;
   } = {};
 
-  // Free users only see non-premium sounds
-  if (userdata?.isSubscribed === false) {
+  // Only filter premium sounds if showAllSounds is not true
+  // Free users only see non-premium sounds unless showAllSounds is true
+  if (!showAllSounds && userdata?.isSubscribed === false) {
     query.isPremium = false;
   }
 

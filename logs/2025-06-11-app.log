@@ -769,3 +769,19 @@
 {"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-06-11 13:22:47"}
 {"level":"info","message":"Admin seeding completed","service":"your-service-name","timestamp":"2025-06-11 13:22:47"}
 {"level":"info","message":"\n╔═════════════════════════════════════╗\n║  🚀 Server launched successfully!   ║\n║  🌐 Running on: 192.168.10.12:4500      ║\n╚═════════════════════════════════════╝","service":"your-service-name","timestamp":"2025-06-11 13:22:47"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-06-11 13:25:27"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-06-11 13:25:28"}
+{"level":"info","message":"Admin seeding completed","service":"your-service-name","timestamp":"2025-06-11 13:25:28"}
+{"level":"info","message":"\n╔═════════════════════════════════════╗\n║  🚀 Server launched successfully!   ║\n║  🌐 Running on: 192.168.10.12:4500      ║\n╚═════════════════════════════════════╝","service":"your-service-name","timestamp":"2025-06-11 13:25:28"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-11 13:25:34"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-11 13:25:34"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-11 13:25:35"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-11 13:25:35"}
+{"level":"info","message":"Subscription cancelled for user 683962b540fb00589991ffac: sub_1RYijLP4ZGqybo6DBpynsSqM","service":"your-service-name","timestamp":"2025-06-11 13:26:12"}
+{"0":"c","1":"u","10":"u","11":"b","12":"s","13":"c","14":"r","15":"i","16":"p","17":"t","18":"i","19":"o","2":"s","20":"n","21":".","22":"u","23":"p","24":"d","25":"a","26":"t","27":"e","28":"d","3":"t","4":"o","5":"m","6":"e","7":"r","8":".","9":"s","level":"info","message":"Webhook event received:","service":"your-service-name","timestamp":"2025-06-11 13:26:13"}
+{"level":"info","message":"Updated subscription for user 683962b540fb00589991ffac: active","service":"your-service-name","timestamp":"2025-06-11 13:26:13"}
+{"level":"info","message":"Synced subscription status for user 683962b540fb00589991ffac: active","service":"your-service-name","timestamp":"2025-06-11 13:26:14"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-11 13:26:14"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-11 13:26:14"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-11 13:26:17"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-11 13:26:17"}

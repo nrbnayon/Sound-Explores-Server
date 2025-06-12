@@ -26,14 +26,15 @@ const addSound = catchAsync(async (req, res) => {
 });
 
 const getAllSound = catchAsync(async (req, res) => {
-  const { searchTerm, category, page, limit } = req.query;
+  const { searchTerm, category, page, limit, showAllSounds } = req.query;
 
   const result = await SoundService.getAllSound(
     req.user.userId,
     searchTerm as string,
     category as string,
     page ? parseInt(page as string, 1000) : undefined,
-    limit ? parseInt(limit as string, 1000) : undefined
+    limit ? parseInt(limit as string, 1000) : undefined,
+    showAllSounds === "true"
   );
 
   sendResponse(res, {
