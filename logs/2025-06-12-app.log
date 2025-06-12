@@ -151,3 +151,47 @@
 {"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-06-12 09:13:21"}
 {"level":"info","message":"Admin seeding completed","service":"your-service-name","timestamp":"2025-06-12 09:13:21"}
 {"level":"info","message":"\n╔═════════════════════════════════════╗\n║  🚀 Server launched successfully!   ║\n║  🌐 Running on: 192.168.10.12:4500      ║\n╚═════════════════════════════════════╝","service":"your-service-name","timestamp":"2025-06-12 09:13:21"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-06-12 09:13:29"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-06-12 09:13:29"}
+{"level":"info","message":"Admin seeding completed","service":"your-service-name","timestamp":"2025-06-12 09:13:29"}
+{"level":"info","message":"\n╔═════════════════════════════════════╗\n║  🚀 Server launched successfully!   ║\n║  🌐 Running on: 192.168.10.12:4500      ║\n╚═════════════════════════════════════╝","service":"your-service-name","timestamp":"2025-06-12 09:13:29"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:14:36"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:14:36"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:14:36"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:14:36"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:14:45"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:14:45"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:14:46"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:14:46"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:23"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:23"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:23"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:23"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:26"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:26"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:26"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:26"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:33"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:33"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:36"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:36"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:42"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:42"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:44"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:44"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:49"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:49"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:52"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:52"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:56"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:56"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:58"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-12 09:15:58"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-06-12 09:21:46"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-06-12 09:21:46"}
+{"level":"info","message":"Admin seeding completed","service":"your-service-name","timestamp":"2025-06-12 09:21:46"}
+{"level":"info","message":"\n╔═════════════════════════════════════╗\n║  🚀 Server launched successfully!   ║\n║  🌐 Running on: 192.168.10.12:4500      ║\n╚═════════════════════════════════════╝","service":"your-service-name","timestamp":"2025-06-12 09:21:46"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-06-12 09:21:51"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-06-12 09:21:51"}
+{"level":"info","message":"Admin seeding completed","service":"your-service-name","timestamp":"2025-06-12 09:21:52"}
+{"level":"info","message":"\n╔═════════════════════════════════════╗\n║  🚀 Server launched successfully!   ║\n║  🌐 Running on: 192.168.10.12:4500      ║\n╚═════════════════════════════════════╝","service":"your-service-name","timestamp":"2025-06-12 09:21:52"}
