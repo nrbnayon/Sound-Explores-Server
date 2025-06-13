@@ -270,6 +270,7 @@ const getMe = async (userId: string) => {
         email: 1,
         role: 1,
         isVerified: 1,
+        premiumUserNumber: 1,
         isSubscribed: 1,
         subscription: 1,
         name: "$profile.fullName",
