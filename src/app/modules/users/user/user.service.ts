@@ -1,5 +1,4 @@
 // src\app\modules\users\user\user.service.ts
-// src\app\modules\users\user\user.service.ts
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { IUserProfile } from "./../userProfile/userProfile.interface";
@@ -21,7 +20,10 @@ import { appConfig } from "../../../config";
 import Stripe from "stripe";
 import { SUBSCRIPTION_PLANS } from "../../../constants/subscriptionPlans";
 import { SubscriptionResponse } from "../../../types/subscription.types";
-import { sendSubscriptionCancelEmail, sendSubscriptionSuccessEmail } from "../../../helper/notifyByEmail";
+import {
+  sendSubscriptionCancelEmail,
+  sendSubscriptionSuccessEmail,
+} from "../../../helper/notifyByEmail";
 
 if (!appConfig.stripe_key) {
   throw new Error("Stripe key is not configured");
@@ -594,14 +596,14 @@ const buySubscriptionIntoDB = async (
   }
 
   const subscriptionPlan = SUBSCRIPTION_PLANS[plan];
-  if (!subscriptionPlan || price !== 4.99) {
+  if (!subscriptionPlan || price !== 3.99) {
     throw new AppError(status.BAD_REQUEST, "Invalid plan or price.");
   }
 
   const session = await mongoose.startSession();
   try {
     return await session.withTransaction(async () => {
-      let stripeCustomerId =
+      const stripeCustomerId =
         user.subscription?.stripeCustomerId ||
         (
           await stripe.customers.create({
@@ -646,41 +648,102 @@ const buySubscriptionIntoDB = async (
         throw new AppError(status.BAD_REQUEST, "Payment failed.");
       }
 
+      // Calculate dates with proper validation
       let startDate: Date | undefined;
       let endDate: Date | undefined;
 
       if (subscription.current_period_start) {
-        startDate = new Date(subscription.current_period_start * 1000);
+        const calculatedStartDate = new Date(
+          subscription.current_period_start * 1000
+        );
+        if (!isNaN(calculatedStartDate.getTime())) {
+          startDate = calculatedStartDate;
+          logger.info("Start date calculated:", startDate.toISOString());
+        } else {
+          logger.error(
+            "Invalid start date from Stripe:",
+            subscription.current_period_start
+          );
+        }
       }
 
       if (subscription.current_period_end) {
-        endDate = new Date(subscription.current_period_end * 1000);
+        const calculatedEndDate = new Date(
+          subscription.current_period_end * 1000
+        );
+        if (!isNaN(calculatedEndDate.getTime())) {
+          endDate = calculatedEndDate;
+          logger.info("End date calculated:", endDate.toISOString());
+        } else {
+          logger.error(
+            "Invalid end date from Stripe:",
+            subscription.current_period_end
+          );
+        }
       }
 
-      const subscriptionData: any = {
-        plan,
-        status: subscription.status,
-        price,
-        autoRenew: !subscription.cancel_at_period_end,
-        stripeSubscriptionId: subscription.id,
-        stripeCustomerId,
+      // Generate premium user number only if subscription is active and user doesn't have one
+      let premiumUserNumber = user.premiumUserNumber;
+
+      if (subscription.status === "active" && !premiumUserNumber) {
+        const getNextPremiumUserNumber = async (): Promise<number> => {
+          const lastUser = await User.findOne(
+            { premiumUserNumber: { $exists: true, $ne: null } },
+            {},
+            { sort: { premiumUserNumber: -1 } }
+          ).session(session);
+          return lastUser?.premiumUserNumber
+            ? lastUser.premiumUserNumber + 1
+            : 1;
+        };
+
+        premiumUserNumber = await getNextPremiumUserNumber();
+      }
+
+      // FIXED: Use dot notation to update subscription fields individually
+      // instead of replacing the entire subscription object
+      const updateData: any = {
+        isSubscribed: subscription.status === "active",
+        "subscription.plan": plan,
+        "subscription.status": subscription.status,
+        "subscription.price": price,
+        "subscription.autoRenew": !subscription.cancel_at_period_end,
+        "subscription.stripeSubscriptionId": subscription.id,
+        "subscription.stripeCustomerId": stripeCustomerId,
       };
 
-      if (startDate && !isNaN(startDate.getTime())) {
-        subscriptionData.startDate = startDate;
+      // Add dates using dot notation - this ensures they are properly saved
+      if (startDate) {
+        updateData["subscription.startDate"] = startDate;
+        logger.info("Adding start date to update:", startDate.toISOString());
       }
 
-      if (endDate && !isNaN(endDate.getTime())) {
-        subscriptionData.endDate = endDate;
+      if (endDate) {
+        updateData["subscription.endDate"] = endDate;
+        logger.info("Adding end date to update:", endDate.toISOString());
       }
+
+      // Only assign premium user number if subscription is active and user doesn't have one
+      if (subscription.status === "active" && !user.premiumUserNumber) {
+        updateData.premiumUserNumber = premiumUserNumber;
+      }
+
+      logger.info("Update data being sent to database:", {
+        userId,
+        updateFields: Object.keys(updateData),
+        subscriptionDates: {
+          startDate: updateData["subscription.startDate"],
+          endDate: updateData["subscription.endDate"],
+        },
+      });
 
       const updatedUser = await User.findByIdAndUpdate(
         userId,
+        { $set: updateData }, // Use $set explicitly for clarity
         {
-          isSubscribed: subscription.status === "active",
-          subscription: subscriptionData,
-        },
-        { new: true, session }
+          new: true,
+          session,
+        }
       );
 
       if (!updatedUser) {
@@ -689,6 +752,16 @@ const buySubscriptionIntoDB = async (
           "Failed to update user."
         );
       }
+
+      // Log the final result to verify dates were saved
+      logger.info("User updated successfully:", {
+        userId: updatedUser._id,
+        isSubscribed: updatedUser.isSubscribed,
+        subscriptionStatus: updatedUser.subscription?.status,
+        startDate: updatedUser.subscription?.startDate,
+        endDate: updatedUser.subscription?.endDate,
+        premiumUserNumber: updatedUser.premiumUserNumber,
+      });
 
       // Send subscription success email
       if (subscription.status === "active") {
@@ -709,6 +782,7 @@ const buySubscriptionIntoDB = async (
         price,
         requiresAction: paymentIntent?.status === "requires_action",
         paymentIntentStatus: paymentIntent?.status,
+        premiumUserNumber: updatedUser.premiumUserNumber,
       };
     });
   } catch (error) {
@@ -975,12 +1049,33 @@ const updateSubscriptionFromWebhook = async (
     return;
   }
 
+  // Get current user data
+  const user = await User.findById(userId).session(session);
+  if (!user) {
+    logger.error("User not found:", userId);
+    return;
+  }
+
   // Build update object with date validation
   const updateData: any = {
     isSubscribed: subscription.status === "active",
     "subscription.status": subscription.status,
     "subscription.stripeSubscriptionId": subscription.id,
   };
+
+  // Generate premium user number if subscription becomes active and user doesn't have one
+  if (subscription.status === "active" && !user.premiumUserNumber) {
+    const getNextPremiumUserNumber = async (): Promise<number> => {
+      const lastUser = await User.findOne(
+        { premiumUserNumber: { $exists: true, $ne: null } },
+        {},
+        { sort: { premiumUserNumber: -1 } }
+      ).session(session);
+      return lastUser?.premiumUserNumber ? lastUser.premiumUserNumber + 1 : 1;
+    };
+
+    updateData.premiumUserNumber = await getNextPremiumUserNumber();
+  }
 
   // Only add dates if they are valid
   if (subscription.current_period_start) {
@@ -1030,6 +1125,13 @@ const handlePaymentSucceeded = async (
     return;
   }
 
+  // Get current user data
+  const user = await User.findById(userId).session(session);
+  if (!user) {
+    logger.error("User not found:", userId);
+    return;
+  }
+
   // Build update object with date validation
   const updateData: any = {
     isSubscribed: true, // Always set to true when payment succeeds
@@ -1037,6 +1139,20 @@ const handlePaymentSucceeded = async (
     "subscription.autoRenew": !subscription.cancel_at_period_end,
     "subscription.stripeSubscriptionId": subscription.id,
   };
+
+  // Generate premium user number if user doesn't have one
+  if (!user.premiumUserNumber) {
+    const getNextPremiumUserNumber = async (): Promise<number> => {
+      const lastUser = await User.findOne(
+        { premiumUserNumber: { $exists: true, $ne: null } },
+        {},
+        { sort: { premiumUserNumber: -1 } }
+      ).session(session);
+      return lastUser?.premiumUserNumber ? lastUser.premiumUserNumber + 1 : 1;
+    };
+
+    updateData.premiumUserNumber = await getNextPremiumUserNumber();
+  }
 
   // Only add dates if they are valid
   if (subscription.current_period_start) {
@@ -1062,7 +1178,7 @@ const handlePaymentSucceeded = async (
 
   if (updateResult) {
     logger.info(
-      `Payment succeeded and subscription activated for user ${userId}: ${subscription.id}`
+      `Payment succeeded and subscription activated for user ${userId}: ${subscription.id}, Premium User Number: ${updateResult.premiumUserNumber}`
     );
   } else {
     logger.error(`Failed to update user ${userId} after successful payment`);

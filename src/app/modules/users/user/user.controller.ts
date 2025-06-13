@@ -224,10 +224,10 @@ const buySubscription = catchAsync(async (req, res) => {
     );
   }
 
-  if (price !== 4.99) {
+  if (price !== 3.99) {
     throw new AppError(
       status.BAD_REQUEST,
-      "Price must be $4.99 for the premium plan."
+      "Price must be $3.99 for the premium plan."
     );
   }
 

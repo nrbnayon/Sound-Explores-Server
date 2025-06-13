@@ -7,6 +7,7 @@ export interface IBaseUser {
   role: TUserRole;
   password: string;
   agreeToTerms?: boolean;
+  premiumUserNumber?: number;
   authentication: {
     expDate: Date;
     otp: number;

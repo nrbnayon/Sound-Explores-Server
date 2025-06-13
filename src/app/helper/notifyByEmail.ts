@@ -188,9 +188,7 @@ const createSubscriptionSuccessTemplate = (): string => `
                 </tr>
                 <tr>
                   <td style="padding: 12px 0; color: #555; font-weight: 600; font-size: 15px;">Price:</td>
-                  <td style="padding: 12px 0; color: #555; text-align: right; font-size: 15px;">${{
-                    price,
-                  }}/month</td>
+                  <td style="padding: 12px 0; color: #555; text-align: right; font-size: 15px;">3.99/month</td>
                 </tr>
                 <tr>
                   <td style="padding: 12px 0; color: #555; font-weight: 600; font-size: 15px;">Start Date:</td>
@@ -416,7 +414,7 @@ export const sendSubscriptionSuccessEmail = async (
     const templateData: EmailTemplateData = {
       name: getUserDisplayName(user),
       plan: subscriptionDetails.plan || "Premium",
-      price: subscriptionDetails.price || "4.99",
+      price: subscriptionDetails.price || "3.99",
       startDate: formatDate(subscriptionDetails.startDate),
       endDate: formatDate(subscriptionDetails.endDate) || getDefaultEndDate(),
     };

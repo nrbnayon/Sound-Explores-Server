@@ -2,9 +2,9 @@
 export const SUBSCRIPTION_PLANS = {
   premium: {
     name: "Premium",
-    price: 4.99,
+    price: 3.99,
     priceId:
-      process.env.STRIPE_PREMIUM_PRICE_ID || "price_1RYfB4P4ZGqybo6DEGsERCnz", 
+      process.env.STRIPE_PREMIUM_PRICE_ID || "price_1RZNFAFowt6kkQS91qbbwjJr",
     features: ["Unlimited access", "Premium features", "Priority support"],
   },
 } as const;
