@@ -93,8 +93,15 @@ const fileFilter = (
 export const upload = multer({
   storage,
   fileFilter,
+  // limits: {
+  //   fileSize: Number(appConfig.multer.file_size_limit) || 100 * 1024 * 1024, // 100MB default
+  //   files: Number(appConfig.multer.max_file_number) || 5,
+  // },
   limits: {
-    fileSize: Number(appConfig.multer.file_size_limit) || 100 * 1024 * 1024, // 100MB default
-    files: Number(appConfig.multer.max_file_number) || 5,
+    fileSize: 200 * 1024 * 1024, // 200MB for large audio files
+    files: Number(appConfig.multer?.max_file_number) || 10,
+    fieldSize: 50 * 1024 * 1024, // 50MB for form fields
+    fieldNameSize: 200, // field name size
+    fields: 20, // max number of fields
   },
 });

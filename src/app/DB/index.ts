@@ -11,6 +11,18 @@ const superUser = {
   email: appConfig.admin.email,
   password: appConfig.admin.password,
   isVerified: true,
+  isSubscribed: true,
+  premiumUserNumber: 0,
+  subscription: {
+    plan: "premium",
+    status: "active",
+    price: 3.99, // Free for admin
+    autoRenew: false, // No need for auto-renewal since it's lifetime
+    startDate: new Date(),
+    endDate: new Date("2099-12-31"), // Far future date for lifetime access
+    stripeSubscriptionId: null, // No Stripe subscription needed
+    stripeCustomerId: null, // No Stripe customer needed
+  },
 };
 
 const superUserProfile = {
@@ -35,9 +47,29 @@ const seedAdmin = async (): Promise<void> => {
       await AdminProfile.create([{ ...superUserProfile, user: data[0]._id }], {
         session,
       });
-      logger.info("Admin Created");
+      logger.info("Admin Created with Premium Lifetime Subscription");
     } else {
-      logger.info("Admin already created");
+      // Update existing admin to ensure they have premium subscription
+      await User.findOneAndUpdate(
+        { role: userRoles.ADMIN },
+        {
+          $set: {
+            isSubscribed: true,
+            subscription: {
+              plan: "premium",
+              status: "active",
+              price: 3.99,
+              autoRenew: false,
+              startDate: new Date(),
+              endDate: new Date("2099-12-31"),
+              stripeSubscriptionId: null,
+              stripeCustomerId: null,
+            },
+          },
+        },
+        { session }
+      );
+      logger.info("Admin already exists - Premium subscription ensured");
     }
 
     await session.commitTransaction();

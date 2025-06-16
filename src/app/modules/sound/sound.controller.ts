@@ -1,3 +1,4 @@
+// sound.controller.js - Fixed controller with better error handling
 import status from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import { getRelativePath } from "../../middleware/fileUpload/getRelativeFilePath";
@@ -5,10 +6,40 @@ import sendResponse from "../../utils/sendResponse";
 import { SoundService } from "./sound.service";
 
 const addSound = catchAsync(async (req, res) => {
+  // FIXED: Better error handling and validation
   if (!req.file) {
-    throw new Error("No File found.");
+    return sendResponse(res, {
+      success: false,
+      statusCode: status.BAD_REQUEST,
+      message: "No audio file provided. Please upload a sound file.",
+      data: null,
+    });
   }
-  const link = getRelativePath(req.file.path);
+
+  // Validate file type
+  if (!req.file.mimetype.startsWith("audio/")) {
+    return sendResponse(res, {
+      success: false,
+      statusCode: status.BAD_REQUEST,
+      message: "Invalid file type. Please upload an audio file.",
+      data: null,
+    });
+  }
+
+  // FIXED: Better error handling for file path
+  let link;
+  try {
+    link = getRelativePath(req.file.path);
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error occurred";
+    return sendResponse(res, {
+      success: false,
+      statusCode: status.INTERNAL_SERVER_ERROR,
+      message: `Error processing uploaded file: ${errorMessage}`,
+      data: null,
+    });
+  }
 
   const soundData = {
     ...req.body,
@@ -28,19 +59,23 @@ const addSound = catchAsync(async (req, res) => {
 const getAllSound = catchAsync(async (req, res) => {
   const { searchTerm, category, page, limit, showAllSounds } = req.query;
 
+  // FIXED: Better parameter parsing
+  const pageNumber = page ? parseInt(page as string, 200) : undefined;
+  const limitNumber = limit ? parseInt(limit as string, 200) : undefined;
+
   const result = await SoundService.getAllSound(
     req.user.userId,
     searchTerm as string,
     category as string,
-    page ? parseInt(page as string, 1000) : undefined,
-    limit ? parseInt(limit as string, 1000) : undefined,
+    pageNumber,
+    limitNumber,
     showAllSounds === "true"
   );
 
   sendResponse(res, {
     success: true,
     statusCode: status.OK,
-    message: "All sound is fetched successfully",
+    message: "All sounds fetched successfully",
     data: result.data,
     meta: {
       totalItem: result.pagination.total,
@@ -53,6 +88,15 @@ const getAllSound = catchAsync(async (req, res) => {
 
 const deleteSound = catchAsync(async (req, res) => {
   const { id } = req.params;
+
+  if (!id) {
+    return sendResponse(res, {
+      success: false,
+      statusCode: status.BAD_REQUEST,
+      message: "Sound ID is required",
+      data: null,
+    });
+  }
 
   const result = await SoundService.deleteSound(id);
 
@@ -68,7 +112,12 @@ const deleteMultipleSounds = catchAsync(async (req, res) => {
   const { ids } = req.body;
 
   if (!ids || !Array.isArray(ids) || ids.length === 0) {
-    throw new Error("No sound IDs provided");
+    return sendResponse(res, {
+      success: false,
+      statusCode: status.BAD_REQUEST,
+      message: "No sound IDs provided or invalid format",
+      data: null,
+    });
   }
 
   const result = await SoundService.deleteMultipleSounds(ids);

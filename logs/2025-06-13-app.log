@@ -202,3 +202,60 @@
 {"level":"info","message":"Admin seeding completed","service":"your-service-name","timestamp":"2025-06-13 10:05:48"}
 {"level":"info","message":"\n╔═════════════════════════════════════╗\n║  🚀 Server launched successfully!   ║\n║  🌐 Running on: 192.168.10.12:4500      ║\n╚═════════════════════════════════════╝","service":"your-service-name","timestamp":"2025-06-13 10:05:48"}
 {"level":"info","message":"Subscription created:","service":"your-service-name","status":"active","subscriptionId":"sub_1RZOt7P4ZGqybo6DHnwPYSpo","timestamp":"2025-06-13 10:08:21"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-06-13 10:12:19"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-06-13 10:12:19"}
+{"level":"info","message":"Admin seeding completed","service":"your-service-name","timestamp":"2025-06-13 10:12:19"}
+{"level":"info","message":"\n╔═════════════════════════════════════╗\n║  🚀 Server launched successfully!   ║\n║  🌐 Running on: 192.168.10.12:4500      ║\n╚═════════════════════════════════════╝","service":"your-service-name","timestamp":"2025-06-13 10:12:19"}
+{"0":"c","1":"u","10":"r","11":"e","12":"a","13":"t","14":"e","15":"d","2":"s","3":"t","4":"o","5":"m","6":"e","7":"r","8":".","9":"c","level":"info","message":"Webhook event received:","service":"your-service-name","timestamp":"2025-06-13 10:13:43"}
+{"level":"info","message":"Received and logged event: customer.created","service":"your-service-name","timestamp":"2025-06-13 10:13:43"}
+{"0":"p","1":"a","10":"t","11":"h","12":"o","13":"d","14":".","15":"a","16":"t","17":"t","18":"a","19":"c","2":"y","20":"h","21":"e","22":"d","3":"m","4":"e","5":"n","6":"t","7":"_","8":"m","9":"e","level":"info","message":"Webhook event received:","service":"your-service-name","timestamp":"2025-06-13 10:13:44"}
+{"level":"info","message":"Unhandled webhook event type: payment_method.attached","service":"your-service-name","timestamp":"2025-06-13 10:13:44"}
+{"0":"c","1":"u","10":"p","11":"d","12":"a","13":"t","14":"e","15":"d","2":"s","3":"t","4":"o","5":"m","6":"e","7":"r","8":".","9":"u","level":"info","message":"Webhook event received:","service":"your-service-name","timestamp":"2025-06-13 10:13:44"}
+{"level":"info","message":"Received and logged event: customer.updated","service":"your-service-name","timestamp":"2025-06-13 10:13:44"}
+{"level":"info","message":"Subscription created:","service":"your-service-name","status":"active","subscriptionId":"sub_1RZOyNP4ZGqybo6DPTp3QoTy","timestamp":"2025-06-13 10:13:47"}
+{"level":"info","message":"Update data being sent to database:","service":"your-service-name","subscriptionDates":{},"timestamp":"2025-06-13 10:13:47","updateFields":["isSubscribed","subscription.plan","subscription.status","subscription.price","subscription.autoRenew","subscription.stripeSubscriptionId","subscription.stripeCustomerId"],"userId":"683962b540fb00589991ffac"}
+{"isSubscribed":true,"level":"info","message":"User updated successfully:","premiumUserNumber":1,"service":"your-service-name","subscriptionStatus":"active","timestamp":"2025-06-13 10:13:47","userId":"683962b540fb00589991ffac"}
+{"0":"c","1":"h","10":"c","11":"e","12":"e","13":"d","14":"e","15":"d","2":"a","3":"r","4":"g","5":"e","6":".","7":"s","8":"u","9":"c","level":"info","message":"Webhook event received:","service":"your-service-name","timestamp":"2025-06-13 10:13:47"}
+{"level":"info","message":"Unhandled webhook event type: charge.succeeded","service":"your-service-name","timestamp":"2025-06-13 10:13:47"}
+{"0":"c","1":"u","10":"p","11":"d","12":"a","13":"t","14":"e","15":"d","2":"s","3":"t","4":"o","5":"m","6":"e","7":"r","8":".","9":"u","level":"info","message":"Webhook event received:","service":"your-service-name","timestamp":"2025-06-13 10:13:47"}
+{"level":"info","message":"Received and logged event: customer.updated","service":"your-service-name","timestamp":"2025-06-13 10:13:47"}
+{"0":"c","1":"u","10":"u","11":"b","12":"s","13":"c","14":"r","15":"i","16":"p","17":"t","18":"i","19":"o","2":"s","20":"n","21":".","22":"c","23":"r","24":"e","25":"a","26":"t","27":"e","28":"d","3":"t","4":"o","5":"m","6":"e","7":"r","8":".","9":"s","level":"info","message":"Webhook event received:","service":"your-service-name","timestamp":"2025-06-13 10:13:47"}
+{"0":"p","1":"a","10":"t","11":"e","12":"n","13":"t","14":".","15":"s","16":"u","17":"c","18":"c","19":"e","2":"y","20":"e","21":"d","22":"e","23":"d","3":"m","4":"e","5":"n","6":"t","7":"_","8":"i","9":"n","level":"info","message":"Webhook event received:","service":"your-service-name","timestamp":"2025-06-13 10:13:47"}
+{"level":"info","message":"Unhandled webhook event type: payment_intent.succeeded","service":"your-service-name","timestamp":"2025-06-13 10:13:47"}
+{"0":"p","1":"a","10":"t","11":"e","12":"n","13":"t","14":".","15":"c","16":"r","17":"e","18":"a","19":"t","2":"y","20":"e","21":"d","3":"m","4":"e","5":"n","6":"t","7":"_","8":"i","9":"n","level":"info","message":"Webhook event received:","service":"your-service-name","timestamp":"2025-06-13 10:13:47"}
+{"level":"info","message":"Received and logged event: payment_intent.created","service":"your-service-name","timestamp":"2025-06-13 10:13:47"}
+{"0":"i","1":"n","10":"e","11":"a","12":"t","13":"e","14":"d","2":"v","3":"o","4":"i","5":"c","6":"e","7":".","8":"c","9":"r","level":"info","message":"Webhook event received:","service":"your-service-name","timestamp":"2025-06-13 10:13:47"}
+{"level":"info","message":"Received and logged event: invoice.created","service":"your-service-name","timestamp":"2025-06-13 10:13:47"}
+{"0":"i","1":"n","10":"n","11":"a","12":"l","13":"i","14":"z","15":"e","16":"d","2":"v","3":"o","4":"i","5":"c","6":"e","7":".","8":"f","9":"i","level":"info","message":"Webhook event received:","service":"your-service-name","timestamp":"2025-06-13 10:13:47"}
+{"level":"info","message":"Received and logged event: invoice.finalized","service":"your-service-name","timestamp":"2025-06-13 10:13:47"}
+{"0":"i","1":"n","10":"i","11":"d","2":"v","3":"o","4":"i","5":"c","6":"e","7":".","8":"p","9":"a","level":"info","message":"Webhook event received:","service":"your-service-name","timestamp":"2025-06-13 10:13:47"}
+{"level":"info","message":"Unhandled webhook event type: invoice.paid","service":"your-service-name","timestamp":"2025-06-13 10:13:47"}
+{"0":"i","1":"n","10":"y","11":"m","12":"e","13":"n","14":"t","15":"_","16":"s","17":"u","18":"c","19":"c","2":"v","20":"e","21":"e","22":"d","23":"e","24":"d","3":"o","4":"i","5":"c","6":"e","7":".","8":"p","9":"a","level":"info","message":"Webhook event received:","service":"your-service-name","timestamp":"2025-06-13 10:13:48"}
+{"level":"info","message":"Updated subscription for user 683962b540fb00589991ffac: active","service":"your-service-name","timestamp":"2025-06-13 10:13:56"}
+{"level":"info","message":"Payment succeeded and subscription activated for user 683962b540fb00589991ffac: sub_1RZOyNP4ZGqybo6DPTp3QoTy, Premium User Number: 1","service":"your-service-name","timestamp":"2025-06-13 10:13:56"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-13 10:13:57"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-13 10:13:57"}
+{"0":"i","1":"n","10":"y","11":"m","12":"e","13":"n","14":"t","15":".","16":"p","17":"a","18":"i","19":"d","2":"v","3":"o","4":"i","5":"c","6":"e","7":"_","8":"p","9":"a","level":"info","message":"Webhook event received:","service":"your-service-name","timestamp":"2025-06-13 10:14:24"}
+{"level":"info","message":"Unhandled webhook event type: invoice_payment.paid","service":"your-service-name","timestamp":"2025-06-13 10:14:24"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-13 10:15:04"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-13 10:15:04"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-13 10:15:31"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-13 10:15:31"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-13 10:15:32"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-13 10:15:32"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-13 10:16:03"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-13 10:16:03"}
+{"level":"info","message":"Using local database start date as fallback","service":"your-service-name","timestamp":"2025-06-13 10:16:04"}
+{"level":"info","message":"Using local database end date as fallback","service":"your-service-name","timestamp":"2025-06-13 10:16:04"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-06-13 10:22:00"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-06-13 10:22:01"}
+{"level":"info","message":"Admin seeding completed","service":"your-service-name","timestamp":"2025-06-13 10:22:01"}
+{"level":"info","message":"\n╔═════════════════════════════════════╗\n║  🚀 Server launched successfully!   ║\n║  🌐 Running on: 192.168.10.12:4500      ║\n╚═════════════════════════════════════╝","service":"your-service-name","timestamp":"2025-06-13 10:22:01"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-06-13 10:22:08"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-06-13 10:22:09"}
+{"level":"info","message":"Admin seeding completed","service":"your-service-name","timestamp":"2025-06-13 10:22:09"}
+{"level":"info","message":"\n╔═════════════════════════════════════╗\n║  🚀 Server launched successfully!   ║\n║  🌐 Running on: 192.168.10.12:4500      ║\n╚═════════════════════════════════════╝","service":"your-service-name","timestamp":"2025-06-13 10:22:09"}
+{"level":"info","message":"MongoDB connected","service":"your-service-name","timestamp":"2025-06-13 10:47:02"}
+{"level":"info","message":"Admin already created","service":"your-service-name","timestamp":"2025-06-13 10:47:02"}
+{"level":"info","message":"Admin seeding completed","service":"your-service-name","timestamp":"2025-06-13 10:47:03"}
+{"level":"info","message":"\n╔═════════════════════════════════════╗\n║  🚀 Server launched successfully!   ║\n║  🌐 Running on: 192.168.10.12:4500      ║\n╚═════════════════════════════════════╝","service":"your-service-name","timestamp":"2025-06-13 10:47:03"}
