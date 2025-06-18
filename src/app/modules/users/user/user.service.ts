@@ -30,6 +30,33 @@ if (!appConfig.stripe_key) {
 }
 const stripe = new Stripe(appConfig.stripe_key);
 
+const cleanupPremiumUserNumbers = async () => {
+  try {
+    // Remove the field entirely for users who have null values
+    const result = await User.updateMany(
+      { premiumUserNumber: null },
+      { $unset: { premiumUserNumber: "" } }
+    );
+    logger.info(
+      `Cleaned up ${result.modifiedCount} users with premiumUserNumber: null`
+    );
+
+    // Also clean up any undefined values
+    const result2 = await User.updateMany(
+      { premiumUserNumber: { $exists: false } },
+      { $unset: { premiumUserNumber: "" } }
+    );
+    logger.info(
+      `Cleaned up ${result2.modifiedCount} users with missing premiumUserNumber field`
+    );
+  } catch (error) {
+    logger.error("Error cleaning up premiumUserNumbers:", error);
+  }
+};
+
+// Run this function once to fix the existing data
+cleanupPremiumUserNumbers();
+
 const createUser = async (data: {
   email: string;
   password: string;
@@ -54,9 +81,7 @@ const createUser = async (data: {
     password: hashedPassword,
     isVerified: true,
   };
-
   const createdUser = await User.create(userData);
-
   if (!createdUser) {
     throw new AppError(status.INTERNAL_SERVER_ERROR, "Failed to create user.");
   }
@@ -372,216 +397,6 @@ const deleteUserIntoDB = async (targetUserId: string) => {
     await session.endSession();
   }
 };
-
-// const buySubscriptionIntoDB = async (
-//   plan: "premium",
-//   price: number,
-//   userEmail: string,
-//   userId: string,
-//   paymentMethodId?: string
-// ): Promise<SubscriptionResponse> => {
-//   const user = await User.findById(userId);
-//   if (!user) throw new AppError(status.NOT_FOUND, "User not found.");
-//   if (user.isSubscribed && user.subscription?.status === "active") {
-//     throw new AppError(status.BAD_REQUEST, "Already subscribed.");
-//   }
-
-//   const subscriptionPlan = SUBSCRIPTION_PLANS[plan];
-//   if (!subscriptionPlan || price !== 4.99) {
-//     throw new AppError(status.BAD_REQUEST, "Invalid plan or price.");
-//   }
-
-//   const session = await mongoose.startSession();
-//   try {
-//     return await session.withTransaction(async () => {
-//       let stripeCustomerId =
-//         user.subscription?.stripeCustomerId ||
-//         (
-//           await stripe.customers.create({
-//             email: userEmail,
-//             metadata: { userId },
-//           })
-//         ).id;
-
-//       if (paymentMethodId) {
-//         await stripe.paymentMethods.attach(paymentMethodId, {
-//           customer: stripeCustomerId,
-//         });
-//         await stripe.customers.update(stripeCustomerId, {
-//           invoice_settings: { default_payment_method: paymentMethodId },
-//         });
-//       }
-
-//       const subscription = await stripe.subscriptions.create({
-//         customer: stripeCustomerId,
-//         items: [{ price: subscriptionPlan.priceId }],
-//         payment_behavior: "error_if_incomplete",
-//         payment_settings: {
-//           save_default_payment_method: "on_subscription",
-//           payment_method_types: ["card"],
-//         },
-//         expand: ["latest_invoice.payment_intent"],
-//       });
-
-//       const invoice = subscription.latest_invoice as Stripe.Invoice;
-//       const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;
-
-//       logger.info("Subscription created:", {
-//         subscriptionId: subscription.id,
-//         status: subscription.status,
-//         paymentIntentStatus: paymentIntent?.status,
-//         current_period_start: subscription.current_period_start,
-//         current_period_end: subscription.current_period_end,
-//       });
-
-//       if (paymentIntent?.last_payment_error) {
-//         logger.error("Payment intent error:", paymentIntent.last_payment_error);
-//       }
-
-//       // Fix: Handle potential null/undefined timestamps
-//       let startDate: Date | undefined;
-//       let endDate: Date | undefined;
-
-//       if (subscription.current_period_start) {
-//         startDate = new Date(subscription.current_period_start * 1000);
-//       }
-
-//       if (subscription.current_period_end) {
-//         endDate = new Date(subscription.current_period_end * 1000);
-//       }
-
-//       // Build subscription object with only valid dates
-//       const subscriptionData: any = {
-//         plan,
-//         status: subscription.status,
-//         price,
-//         autoRenew: !subscription.cancel_at_period_end,
-//         stripeSubscriptionId: subscription.id,
-//         stripeCustomerId,
-//       };
-
-//       // Only add dates if they are valid
-//       if (startDate && !isNaN(startDate.getTime())) {
-//         subscriptionData.startDate = startDate;
-//       }
-
-//       if (endDate && !isNaN(endDate.getTime())) {
-//         subscriptionData.endDate = endDate;
-//       }
-
-//       const updatedUser = await User.findByIdAndUpdate(
-//         userId,
-//         {
-//           isSubscribed: subscription.status === "active",
-//           subscription: subscriptionData,
-//         },
-//         { new: true, session }
-//       );
-
-//       if (!updatedUser)
-//         throw new AppError(
-//           status.INTERNAL_SERVER_ERROR,
-//           "Failed to update user."
-//         );
-
-//       return {
-//         subscriptionId: subscription.id,
-//         clientSecret: paymentIntent?.client_secret,
-//         status: subscription.status,
-//         currentPeriodEnd: endDate,
-//         plan,
-//         price,
-//         requiresAction: paymentIntent?.status === "requires_action",
-//         paymentIntentStatus: paymentIntent?.status,
-//       };
-//     });
-//   } catch (error) {
-//     logger.error("Subscription error:", error);
-//     throw error instanceof AppError
-//       ? error
-//       : new AppError(status.INTERNAL_SERVER_ERROR, "Subscription failed.");
-//   } finally {
-//     await session.endSession();
-//   }
-// };
-
-// const cancelSubscriptionIntoDB = async (userId: string) => {
-//   const user = await User.findById(userId);
-//   if (!user) throw new AppError(status.NOT_FOUND, "User not found.");
-//   if (!user.isSubscribed || !user.subscription?.stripeSubscriptionId) {
-//     throw new AppError(status.BAD_REQUEST, "No active subscription found.");
-//   }
-
-//   const session = await mongoose.startSession();
-
-//   try {
-//     return await session.withTransaction(async () => {
-//       if (!user.subscription?.stripeSubscriptionId) {
-//         throw new AppError(status.BAD_REQUEST, "No subscription ID found.");
-//       }
-//       const cancelledSubscription = await stripe.subscriptions.update(
-//         user.subscription.stripeSubscriptionId,
-//         { cancel_at_period_end: true }
-//       );
-
-//       // Validate end date
-//       const endDate = cancelledSubscription.current_period_end
-//         ? new Date(cancelledSubscription.current_period_end * 1000)
-//         : null;
-
-//       if (endDate && isNaN(endDate.getTime())) {
-//         logger.error(
-//           `Invalid end date for subscription ${cancelledSubscription.id}`
-//         );
-//         throw new AppError(
-//           status.INTERNAL_SERVER_ERROR,
-//           "Invalid subscription end date."
-//         );
-//       }
-
-//       const updateData: any = {
-//         "subscription.status": cancelledSubscription.status,
-//         "subscription.autoRenew": false,
-//       };
-
-//       if (endDate) {
-//         updateData["subscription.endDate"] = endDate;
-//       }
-
-//       const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
-//         new: true,
-//         session,
-//       });
-
-//       if (!updatedUser) {
-//         throw new AppError(
-//           status.INTERNAL_SERVER_ERROR,
-//           "Failed to update subscription."
-//         );
-//       }
-
-//       logger.info(
-//         `Subscription cancelled for user ${userId}: ${cancelledSubscription.id}`
-//       );
-
-//       return {
-//         message:
-//           "Subscription will be cancelled at the end of the current period",
-//         cancelAtPeriodEnd: endDate,
-//       };
-//     });
-//   } catch (error) {
-//     logger.error("Subscription cancellation error:", error);
-//     throw error instanceof AppError
-//       ? error
-//       : new AppError(
-//           status.INTERNAL_SERVER_ERROR,
-//           "Failed to cancel subscription."
-//         );
-//   } finally {
-//     await session.endSession();
-//   }
-// };
 
 const buySubscriptionIntoDB = async (
   plan: "premium",

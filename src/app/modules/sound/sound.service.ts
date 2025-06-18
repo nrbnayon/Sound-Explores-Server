@@ -31,37 +31,30 @@ export const getAllSound = async (
     category?: string;
   } = {};
 
-  // Only filter premium sounds if showAllSounds is not true
-  // Free users only see non-premium sounds unless showAllSounds is true
   if (!showAllSounds && userdata?.isSubscribed === false) {
     query.isPremium = false;
   }
 
-  // Add search filter if provided
   if (searchTerm) {
     query.title = { $regex: searchTerm, $options: "i" };
   }
 
-  // Add category filter if provided
   if (category) {
     query.category = category;
   }
 
-  // Set up pagination
   const pageNumber = page || 1;
   const limitNumber = limit || 1000;
   const skip = (pageNumber - 1) * limitNumber;
 
-  // Get total count for pagination info
   const total = await Sound.countDocuments(query);
 
-  // Execute query with pagination
+  // UPDATED: Sort by isPremium (false first, then true) and then by createdAt
   const result = await Sound.find(query)
-    .sort({ createdAt: -1 })
+    .sort({ isPremium: 1, createdAt: -1 }) // isPremium: 1 puts false before true
     .skip(skip)
     .limit(limitNumber);
 
-  // Return with pagination metadata
   return {
     data: result,
     pagination: {

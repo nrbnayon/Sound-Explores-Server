@@ -29,6 +29,7 @@ export const appConfig = {
   },
   stripe_key: process.env.STRIPE_SECRET_KEY,
   stripe_webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
+  local_stripe_webhook_secret: process.env.LOCAL_STRIPE_WEBHOOK_SECRET,
   multer: {
     file_size_limit: process.env.MAX_FILE_SIZE,
     max_file_number: process.env.MAX_COUNT_FILE,

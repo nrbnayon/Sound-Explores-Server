@@ -27,7 +27,11 @@ const userSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, select: false },
   role: { type: String, enum: userRole, default: "USER" },
-  premiumUserNumber: { type: Number, unique: true },
+  premiumUserNumber: {
+    type: Number,
+    unique: true,
+    sparse: true,
+  },
   agreeToTerms: { type: Boolean },
   authentication: {
     expDate: { type: Date, default: null },
@@ -47,6 +51,13 @@ userSchema.methods.comparePassword = async function (enteredPassword: string) {
     throw new Error("Error comparing password");
   }
 };
+
+userSchema.pre("save", function (next) {
+  if (this.premiumUserNumber === null) {
+    this.premiumUserNumber = undefined; 
+  }
+  next();
+});
 
 const User = model<IUser>("User", userSchema);
 
