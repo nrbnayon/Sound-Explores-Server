@@ -1,4 +1,5 @@
 // src\app\modules\users\user\user.service.ts
+// src\app\modules\users\user\user.service.ts
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { IUserProfile } from "./../userProfile/userProfile.interface";
@@ -30,33 +31,6 @@ if (!appConfig.stripe_key) {
 }
 const stripe = new Stripe(appConfig.stripe_key);
 
-const cleanupPremiumUserNumbers = async () => {
-  try {
-    // Remove the field entirely for users who have null values
-    const result = await User.updateMany(
-      { premiumUserNumber: null },
-      { $unset: { premiumUserNumber: "" } }
-    );
-    logger.info(
-      `Cleaned up ${result.modifiedCount} users with premiumUserNumber: null`
-    );
-
-    // Also clean up any undefined values
-    const result2 = await User.updateMany(
-      { premiumUserNumber: { $exists: false } },
-      { $unset: { premiumUserNumber: "" } }
-    );
-    logger.info(
-      `Cleaned up ${result2.modifiedCount} users with missing premiumUserNumber field`
-    );
-  } catch (error) {
-    logger.error("Error cleaning up premiumUserNumbers:", error);
-  }
-};
-
-// Run this function once to fix the existing data
-cleanupPremiumUserNumbers();
-
 const createUser = async (data: {
   email: string;
   password: string;
@@ -81,7 +55,9 @@ const createUser = async (data: {
     password: hashedPassword,
     isVerified: true,
   };
+
   const createdUser = await User.create(userData);
+
   if (!createdUser) {
     throw new AppError(status.INTERNAL_SERVER_ERROR, "Failed to create user.");
   }
@@ -295,7 +271,6 @@ const getMe = async (userId: string) => {
         email: 1,
         role: 1,
         isVerified: 1,
-        premiumUserNumber: 1,
         isSubscribed: 1,
         subscription: 1,
         name: "$profile.fullName",
@@ -398,6 +373,216 @@ const deleteUserIntoDB = async (targetUserId: string) => {
   }
 };
 
+// const buySubscriptionIntoDB = async (
+//   plan: "premium",
+//   price: number,
+//   userEmail: string,
+//   userId: string,
+//   paymentMethodId?: string
+// ): Promise<SubscriptionResponse> => {
+//   const user = await User.findById(userId);
+//   if (!user) throw new AppError(status.NOT_FOUND, "User not found.");
+//   if (user.isSubscribed && user.subscription?.status === "active") {
+//     throw new AppError(status.BAD_REQUEST, "Already subscribed.");
+//   }
+
+//   const subscriptionPlan = SUBSCRIPTION_PLANS[plan];
+//   if (!subscriptionPlan || price !== 4.99) {
+//     throw new AppError(status.BAD_REQUEST, "Invalid plan or price.");
+//   }
+
+//   const session = await mongoose.startSession();
+//   try {
+//     return await session.withTransaction(async () => {
+//       let stripeCustomerId =
+//         user.subscription?.stripeCustomerId ||
+//         (
+//           await stripe.customers.create({
+//             email: userEmail,
+//             metadata: { userId },
+//           })
+//         ).id;
+
+//       if (paymentMethodId) {
+//         await stripe.paymentMethods.attach(paymentMethodId, {
+//           customer: stripeCustomerId,
+//         });
+//         await stripe.customers.update(stripeCustomerId, {
+//           invoice_settings: { default_payment_method: paymentMethodId },
+//         });
+//       }
+
+//       const subscription = await stripe.subscriptions.create({
+//         customer: stripeCustomerId,
+//         items: [{ price: subscriptionPlan.priceId }],
+//         payment_behavior: "error_if_incomplete",
+//         payment_settings: {
+//           save_default_payment_method: "on_subscription",
+//           payment_method_types: ["card"],
+//         },
+//         expand: ["latest_invoice.payment_intent"],
+//       });
+
+//       const invoice = subscription.latest_invoice as Stripe.Invoice;
+//       const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;
+
+//       logger.info("Subscription created:", {
+//         subscriptionId: subscription.id,
+//         status: subscription.status,
+//         paymentIntentStatus: paymentIntent?.status,
+//         current_period_start: subscription.current_period_start,
+//         current_period_end: subscription.current_period_end,
+//       });
+
+//       if (paymentIntent?.last_payment_error) {
+//         logger.error("Payment intent error:", paymentIntent.last_payment_error);
+//       }
+
+//       // Fix: Handle potential null/undefined timestamps
+//       let startDate: Date | undefined;
+//       let endDate: Date | undefined;
+
+//       if (subscription.current_period_start) {
+//         startDate = new Date(subscription.current_period_start * 1000);
+//       }
+
+//       if (subscription.current_period_end) {
+//         endDate = new Date(subscription.current_period_end * 1000);
+//       }
+
+//       // Build subscription object with only valid dates
+//       const subscriptionData: any = {
+//         plan,
+//         status: subscription.status,
+//         price,
+//         autoRenew: !subscription.cancel_at_period_end,
+//         stripeSubscriptionId: subscription.id,
+//         stripeCustomerId,
+//       };
+
+//       // Only add dates if they are valid
+//       if (startDate && !isNaN(startDate.getTime())) {
+//         subscriptionData.startDate = startDate;
+//       }
+
+//       if (endDate && !isNaN(endDate.getTime())) {
+//         subscriptionData.endDate = endDate;
+//       }
+
+//       const updatedUser = await User.findByIdAndUpdate(
+//         userId,
+//         {
+//           isSubscribed: subscription.status === "active",
+//           subscription: subscriptionData,
+//         },
+//         { new: true, session }
+//       );
+
+//       if (!updatedUser)
+//         throw new AppError(
+//           status.INTERNAL_SERVER_ERROR,
+//           "Failed to update user."
+//         );
+
+//       return {
+//         subscriptionId: subscription.id,
+//         clientSecret: paymentIntent?.client_secret,
+//         status: subscription.status,
+//         currentPeriodEnd: endDate,
+//         plan,
+//         price,
+//         requiresAction: paymentIntent?.status === "requires_action",
+//         paymentIntentStatus: paymentIntent?.status,
+//       };
+//     });
+//   } catch (error) {
+//     logger.error("Subscription error:", error);
+//     throw error instanceof AppError
+//       ? error
+//       : new AppError(status.INTERNAL_SERVER_ERROR, "Subscription failed.");
+//   } finally {
+//     await session.endSession();
+//   }
+// };
+
+// const cancelSubscriptionIntoDB = async (userId: string) => {
+//   const user = await User.findById(userId);
+//   if (!user) throw new AppError(status.NOT_FOUND, "User not found.");
+//   if (!user.isSubscribed || !user.subscription?.stripeSubscriptionId) {
+//     throw new AppError(status.BAD_REQUEST, "No active subscription found.");
+//   }
+
+//   const session = await mongoose.startSession();
+
+//   try {
+//     return await session.withTransaction(async () => {
+//       if (!user.subscription?.stripeSubscriptionId) {
+//         throw new AppError(status.BAD_REQUEST, "No subscription ID found.");
+//       }
+//       const cancelledSubscription = await stripe.subscriptions.update(
+//         user.subscription.stripeSubscriptionId,
+//         { cancel_at_period_end: true }
+//       );
+
+//       // Validate end date
+//       const endDate = cancelledSubscription.current_period_end
+//         ? new Date(cancelledSubscription.current_period_end * 1000)
+//         : null;
+
+//       if (endDate && isNaN(endDate.getTime())) {
+//         logger.error(
+//           `Invalid end date for subscription ${cancelledSubscription.id}`
+//         );
+//         throw new AppError(
+//           status.INTERNAL_SERVER_ERROR,
+//           "Invalid subscription end date."
+//         );
+//       }
+
+//       const updateData: any = {
+//         "subscription.status": cancelledSubscription.status,
+//         "subscription.autoRenew": false,
+//       };
+
+//       if (endDate) {
+//         updateData["subscription.endDate"] = endDate;
+//       }
+
+//       const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+//         new: true,
+//         session,
+//       });
+
+//       if (!updatedUser) {
+//         throw new AppError(
+//           status.INTERNAL_SERVER_ERROR,
+//           "Failed to update subscription."
+//         );
+//       }
+
+//       logger.info(
+//         `Subscription cancelled for user ${userId}: ${cancelledSubscription.id}`
+//       );
+
+//       return {
+//         message:
+//           "Subscription will be cancelled at the end of the current period",
+//         cancelAtPeriodEnd: endDate,
+//       };
+//     });
+//   } catch (error) {
+//     logger.error("Subscription cancellation error:", error);
+//     throw error instanceof AppError
+//       ? error
+//       : new AppError(
+//           status.INTERNAL_SERVER_ERROR,
+//           "Failed to cancel subscription."
+//         );
+//   } finally {
+//     await session.endSession();
+//   }
+// };
+
 const buySubscriptionIntoDB = async (
   plan: "premium",
   price: number,
@@ -412,7 +597,7 @@ const buySubscriptionIntoDB = async (
   }
 
   const subscriptionPlan = SUBSCRIPTION_PLANS[plan];
-  if (!subscriptionPlan || price !== 3.99) {
+  if (!subscriptionPlan) {
     throw new AppError(status.BAD_REQUEST, "Invalid plan or price.");
   }
 
@@ -451,7 +636,7 @@ const buySubscriptionIntoDB = async (
       const invoice = subscription.latest_invoice as Stripe.Invoice;
       const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;
 
-      logger.info("Subscription created:", {
+      console.log("Subscription created:", {
         subscriptionId: subscription.id,
         status: subscription.status,
         paymentIntentStatus: paymentIntent?.status,
@@ -464,60 +649,65 @@ const buySubscriptionIntoDB = async (
         throw new AppError(status.BAD_REQUEST, "Payment failed.");
       }
 
-      // Calculate dates with proper validation
       let startDate: Date | undefined;
       let endDate: Date | undefined;
 
+      // Enhanced date handling with debugging and fallback
       if (subscription.current_period_start) {
-        const calculatedStartDate = new Date(
-          subscription.current_period_start * 1000
+        startDate = new Date(subscription.current_period_start * 1000);
+        logger.info("Start date from Stripe:", {
+          timestamp: subscription.current_period_start,
+          converted: startDate.toISOString(),
+          isValid: !isNaN(startDate.getTime()),
+        });
+      } else {
+        // Fallback: Set start date to now if Stripe doesn't provide it
+        startDate = new Date();
+        logger.warn(
+          "No start date from Stripe, using current time:",
+          startDate.toISOString()
         );
-        if (!isNaN(calculatedStartDate.getTime())) {
-          startDate = calculatedStartDate;
-          logger.info("Start date calculated:", startDate.toISOString());
-        } else {
-          logger.error(
-            "Invalid start date from Stripe:",
-            subscription.current_period_start
-          );
-        }
       }
 
       if (subscription.current_period_end) {
-        const calculatedEndDate = new Date(
-          subscription.current_period_end * 1000
-        );
-        if (!isNaN(calculatedEndDate.getTime())) {
-          endDate = calculatedEndDate;
-          logger.info("End date calculated:", endDate.toISOString());
-        } else {
-          logger.error(
-            "Invalid end date from Stripe:",
-            subscription.current_period_end
+        endDate = new Date(subscription.current_period_end * 1000);
+        logger.info("End date from Stripe:", {
+          timestamp: subscription.current_period_end,
+          converted: endDate.toISOString(),
+          isValid: !isNaN(endDate.getTime()),
+        });
+      } else {
+        // Fallback: Calculate end date manually (30 days from start for monthly)
+        if (startDate) {
+          endDate = new Date(startDate);
+          endDate.setMonth(endDate.getMonth() + 1); // Add 1 month for monthly subscription
+          logger.warn(
+            "No end date from Stripe, calculated manually:",
+            endDate.toISOString()
           );
         }
       }
 
-      // Generate premium user number only if subscription is active and user doesn't have one
-      let premiumUserNumber = user.premiumUserNumber;
-
-      if (subscription.status === "active" && !premiumUserNumber) {
-        const getNextPremiumUserNumber = async (): Promise<number> => {
-          const lastUser = await User.findOne(
-            { premiumUserNumber: { $exists: true, $ne: null } },
-            {},
-            { sort: { premiumUserNumber: -1 } }
-          ).session(session);
-          return lastUser?.premiumUserNumber
-            ? lastUser.premiumUserNumber + 1
-            : 1;
-        };
-
-        premiumUserNumber = await getNextPremiumUserNumber();
+      // Additional validation and manual setting if dates are still invalid
+      const now = new Date();
+      if (!startDate || isNaN(startDate.getTime())) {
+        startDate = now;
+        logger.warn(
+          "Invalid start date, setting to current time:",
+          startDate.toISOString()
+        );
       }
 
-      // FIXED: Use dot notation to update subscription fields individually
-      // instead of replacing the entire subscription object
+      if (!endDate || isNaN(endDate.getTime())) {
+        endDate = new Date(startDate);
+        endDate.setMonth(endDate.getMonth() + 1); // Monthly subscription
+        logger.warn(
+          "Invalid end date, setting to 1 month from start:",
+          endDate.toISOString()
+        );
+      }
+
+      // Build update object using dot notation for nested fields
       const updateData: any = {
         isSubscribed: subscription.status === "active",
         "subscription.plan": plan,
@@ -526,40 +716,22 @@ const buySubscriptionIntoDB = async (
         "subscription.autoRenew": !subscription.cancel_at_period_end,
         "subscription.stripeSubscriptionId": subscription.id,
         "subscription.stripeCustomerId": stripeCustomerId,
+        "subscription.startDate": startDate, // Always set these now
+        "subscription.endDate": endDate,
       };
 
-      // Add dates using dot notation - this ensures they are properly saved
-      if (startDate) {
-        updateData["subscription.startDate"] = startDate;
-        logger.info("Adding start date to update:", startDate.toISOString());
-      }
-
-      if (endDate) {
-        updateData["subscription.endDate"] = endDate;
-        logger.info("Adding end date to update:", endDate.toISOString());
-      }
-
-      // Only assign premium user number if subscription is active and user doesn't have one
-      if (subscription.status === "active" && !user.premiumUserNumber) {
-        updateData.premiumUserNumber = premiumUserNumber;
-      }
-
-      logger.info("Update data being sent to database:", {
-        userId,
-        updateFields: Object.keys(updateData),
-        subscriptionDates: {
-          startDate: updateData["subscription.startDate"],
-          endDate: updateData["subscription.endDate"],
-        },
+      logger.info("Final dates being saved:", {
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+        startDateValid: !isNaN(startDate.getTime()),
+        endDateValid: !isNaN(endDate.getTime()),
       });
 
+      // Use $set operator explicitly for proper nested field updates
       const updatedUser = await User.findByIdAndUpdate(
         userId,
-        { $set: updateData }, // Use $set explicitly for clarity
-        {
-          new: true,
-          session,
-        }
+        { $set: updateData },
+        { new: true, session }
       );
 
       if (!updatedUser) {
@@ -569,15 +741,36 @@ const buySubscriptionIntoDB = async (
         );
       }
 
-      // Log the final result to verify dates were saved
-      logger.info("User updated successfully:", {
+      // Log successful update for verification
+      console.log("User subscription updated successfully:", {
         userId: updatedUser._id,
         isSubscribed: updatedUser.isSubscribed,
         subscriptionStatus: updatedUser.subscription?.status,
-        startDate: updatedUser.subscription?.startDate,
-        endDate: updatedUser.subscription?.endDate,
-        premiumUserNumber: updatedUser.premiumUserNumber,
+        startDate: updatedUser.subscription?.startDate?.toISOString(),
+        endDate: updatedUser.subscription?.endDate?.toISOString(),
+        stripeStartTimestamp: subscription.current_period_start,
+        stripeEndTimestamp: subscription.current_period_end,
       });
+
+      // Verify dates were actually saved
+      if (
+        !updatedUser.subscription?.startDate ||
+        !updatedUser.subscription?.endDate
+      ) {
+        logger.error("Dates not saved properly, attempting direct update");
+
+        // Fallback: Direct update if nested update failed
+        await User.updateOne(
+          { _id: userId },
+          {
+            $set: {
+              "subscription.startDate": startDate,
+              "subscription.endDate": endDate,
+            },
+          },
+          { session }
+        );
+      }
 
       // Send subscription success email
       if (subscription.status === "active") {
@@ -591,14 +784,13 @@ const buySubscriptionIntoDB = async (
 
       return {
         subscriptionId: subscription.id,
-        clientSecret: paymentIntent?.client_secret,
+        clientSecret: paymentIntent?.client_secret ?? undefined,
         status: subscription.status,
         currentPeriodEnd: endDate,
         plan,
         price,
         requiresAction: paymentIntent?.status === "requires_action",
         paymentIntentStatus: paymentIntent?.status,
-        premiumUserNumber: updatedUser.premiumUserNumber,
       };
     });
   } catch (error) {
@@ -865,33 +1057,12 @@ const updateSubscriptionFromWebhook = async (
     return;
   }
 
-  // Get current user data
-  const user = await User.findById(userId).session(session);
-  if (!user) {
-    logger.error("User not found:", userId);
-    return;
-  }
-
   // Build update object with date validation
   const updateData: any = {
     isSubscribed: subscription.status === "active",
     "subscription.status": subscription.status,
     "subscription.stripeSubscriptionId": subscription.id,
   };
-
-  // Generate premium user number if subscription becomes active and user doesn't have one
-  if (subscription.status === "active" && !user.premiumUserNumber) {
-    const getNextPremiumUserNumber = async (): Promise<number> => {
-      const lastUser = await User.findOne(
-        { premiumUserNumber: { $exists: true, $ne: null } },
-        {},
-        { sort: { premiumUserNumber: -1 } }
-      ).session(session);
-      return lastUser?.premiumUserNumber ? lastUser.premiumUserNumber + 1 : 1;
-    };
-
-    updateData.premiumUserNumber = await getNextPremiumUserNumber();
-  }
 
   // Only add dates if they are valid
   if (subscription.current_period_start) {
@@ -941,13 +1112,6 @@ const handlePaymentSucceeded = async (
     return;
   }
 
-  // Get current user data
-  const user = await User.findById(userId).session(session);
-  if (!user) {
-    logger.error("User not found:", userId);
-    return;
-  }
-
   // Build update object with date validation
   const updateData: any = {
     isSubscribed: true, // Always set to true when payment succeeds
@@ -955,20 +1119,6 @@ const handlePaymentSucceeded = async (
     "subscription.autoRenew": !subscription.cancel_at_period_end,
     "subscription.stripeSubscriptionId": subscription.id,
   };
-
-  // Generate premium user number if user doesn't have one
-  if (!user.premiumUserNumber) {
-    const getNextPremiumUserNumber = async (): Promise<number> => {
-      const lastUser = await User.findOne(
-        { premiumUserNumber: { $exists: true, $ne: null } },
-        {},
-        { sort: { premiumUserNumber: -1 } }
-      ).session(session);
-      return lastUser?.premiumUserNumber ? lastUser.premiumUserNumber + 1 : 1;
-    };
-
-    updateData.premiumUserNumber = await getNextPremiumUserNumber();
-  }
 
   // Only add dates if they are valid
   if (subscription.current_period_start) {
@@ -994,7 +1144,7 @@ const handlePaymentSucceeded = async (
 
   if (updateResult) {
     logger.info(
-      `Payment succeeded and subscription activated for user ${userId}: ${subscription.id}, Premium User Number: ${updateResult.premiumUserNumber}`
+      `Payment succeeded and subscription activated for user ${userId}: ${subscription.id}`
     );
   } else {
     logger.error(`Failed to update user ${userId} after successful payment`);

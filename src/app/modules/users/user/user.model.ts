@@ -44,6 +44,13 @@ const userSchema = new Schema<IUser>({
   subscription: { type: subscriptionSchema, default: () => ({}) },
 });
 
+userSchema.pre("save", function (next) {
+  if (this.premiumUserNumber === null) {
+    this.premiumUserNumber = undefined;
+  }
+  next();
+});
+
 userSchema.methods.comparePassword = async function (enteredPassword: string) {
   try {
     return await bcrypt.compare(enteredPassword, this.password);
@@ -51,13 +58,6 @@ userSchema.methods.comparePassword = async function (enteredPassword: string) {
     throw new Error("Error comparing password");
   }
 };
-
-userSchema.pre("save", function (next) {
-  if (this.premiumUserNumber === null) {
-    this.premiumUserNumber = undefined; 
-  }
-  next();
-});
 
 const User = model<IUser>("User", userSchema);
 
