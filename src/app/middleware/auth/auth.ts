@@ -13,9 +13,9 @@ export const auth =
     try {
       let token: string | undefined;
 
-      // // Log all cookies for debugging
-      // console.log("All cookies:", req.cookies);
-      // console.log("Authorization header:", req.headers.authorization);
+      // Log all cookies for debugging
+      console.log("All cookies:", req.cookies);
+      console.log("Authorization header:", req.headers.authorization);
 
       // First, try to get token from Authorization header (for password reset, etc.)
       const tokenWithBearer = req.headers.authorization as string;

@@ -7,15 +7,17 @@ import { AuthService } from "./auth.service";
 const userLogin = catchAsync(async (req, res, next) => {
   const result = await AuthService.userLogin(req.body);
 
-  // console.log("User login::", result);
+  console.log("User login::", result);
 
-  // console.log("Cookies set:", {
-  //   isAuthenticated: true,
-  //   accessToken: result.accessToken ? "SET" : "NOT SET",
-  //   refreshToken: result.refreshToken ? "SET" : "NOT SET",
-  // });
+  console.log("Cookies set:", {
+    isAuthenticated: true,
+    accessToken: result.accessToken ? "SET" : "NOT SET",
+    refreshToken: result.refreshToken ? "SET" : "NOT SET",
+  });
   if (result.accessToken && result.refreshToken) {
     const isProduction = process.env.NODE_ENV === "production";
+    const domain = isProduction ? "http://192.168.10.12:3000" : undefined;
+
     // Set isAuthenticated cookie with long expiration (1 year)
     res.cookie("isAuthenticated", true, {
       secure: isProduction,
@@ -43,7 +45,7 @@ const userLogin = catchAsync(async (req, res, next) => {
       path: "/",
     });
 
-    // console.log("Cookies set successfully");
+    console.log("Cookies set successfully");
   }
 
   sendResponse(res, {
