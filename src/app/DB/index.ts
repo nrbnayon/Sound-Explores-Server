@@ -12,16 +12,15 @@ const superUser = {
   password: appConfig.admin.password,
   isVerified: true,
   isSubscribed: true,
-  premiumUserNumber: 0,
   subscription: {
     plan: "premium",
     status: "active",
-    price: 3.99, // Free for admin
-    autoRenew: false, // No need for auto-renewal since it's lifetime
+    price: 3.99, 
+    autoRenew: false, 
     startDate: new Date(),
-    endDate: new Date("2099-12-31"), // Far future date for lifetime access
-    stripeSubscriptionId: null, // No Stripe subscription needed
-    stripeCustomerId: null, // No Stripe customer needed
+    endDate: new Date("2099-12-31"), 
+    stripeSubscriptionId: null, 
+    stripeCustomerId: null, 
   },
 };
 

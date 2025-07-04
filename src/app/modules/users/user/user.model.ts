@@ -27,11 +27,6 @@ const userSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, select: false },
   role: { type: String, enum: userRole, default: "USER" },
-  premiumUserNumber: {
-    type: Number,
-    unique: true,
-    sparse: true,
-  },
   agreeToTerms: { type: Boolean },
   authentication: {
     expDate: { type: Date, default: null },
@@ -42,13 +37,6 @@ const userSchema = new Schema<IUser>({
   needToResetPass: { type: Boolean, default: false },
   isSubscribed: { type: Boolean, default: false },
   subscription: { type: subscriptionSchema, default: () => ({}) },
-});
-
-userSchema.pre("save", function (next) {
-  if (this.premiumUserNumber === null) {
-    this.premiumUserNumber = undefined;
-  }
-  next();
 });
 
 userSchema.methods.comparePassword = async function (enteredPassword: string) {

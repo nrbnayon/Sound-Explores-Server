@@ -6,12 +6,12 @@ const router = Router();
 
 // router.get("/get-access-token", AuthController.getNewAccessToken);
 router.get("/refresh-token", AuthController.getNewAccessToken);
-
 router.post("/login", AuthController.userLogin);
-
+router.post("/logout", AuthController.userLogout);
 router.patch("/verify-user", AuthController.verifyUser);
 router.patch("/forgot-password-request", AuthController.forgotPasswordRequest);
 router.patch("/reset-password", AuthController.resetPassword);
 router.patch("/update-password", auth("USER"), AuthController.updatePassword);
 router.patch("/resend-code", AuthController.reSendOtp);
+
 export const AuthRoute = router;

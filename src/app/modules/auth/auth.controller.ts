@@ -3,19 +3,48 @@ import status from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { AuthService } from "./auth.service";
-import { appConfig } from "../../config";
 
 const userLogin = catchAsync(async (req, res, next) => {
   const result = await AuthService.userLogin(req.body);
 
-  // Set refresh token cookie with long expiration (1 year)
-  res.cookie("refreshToken", result.refreshToken, {
-    secure: appConfig.server.node_env === "production",
-    httpOnly: true,
-    maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year in milliseconds
-    sameSite: "strict",
-    path: "/",
-  });
+  // console.log("User login::", result);
+
+  // console.log("Cookies set:", {
+  //   isAuthenticated: true,
+  //   accessToken: result.accessToken ? "SET" : "NOT SET",
+  //   refreshToken: result.refreshToken ? "SET" : "NOT SET",
+  // });
+  if (result.accessToken && result.refreshToken) {
+    const isProduction = process.env.NODE_ENV === "production";
+    // Set isAuthenticated cookie with long expiration (1 year)
+    res.cookie("isAuthenticated", true, {
+      secure: isProduction,
+      httpOnly: true,
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+      path: "/",
+    });
+
+    // Set accessToken cookie with long expiration (1 year)
+    res.cookie("accessToken", result.accessToken, {
+      secure: isProduction,
+      httpOnly: true,
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+      path: "/",
+    });
+
+    // Set refreshToken cookie with long expiration (1 year)
+    res.cookie("refreshToken", result.refreshToken, {
+      secure: isProduction,
+      httpOnly: true,
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+      path: "/",
+    });
+
+    // console.log("Cookies set successfully");
+  }
 
   sendResponse(res, {
     success: true,
@@ -24,6 +53,35 @@ const userLogin = catchAsync(async (req, res, next) => {
     data: result,
   });
 });
+
+const userLogout = catchAsync(async (req, res, next) => {
+  // Clear all auth cookies
+  res.clearCookie("isAuthenticated", {
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  res.clearCookie("accessToken", {
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  res.clearCookie("refreshToken", {
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  sendResponse(res, {
+    success: true,
+    statusCode: status.OK,
+    message: "User logged out successfully",
+    data: null,
+  });
+});
+
 const verifyUser = catchAsync(async (req, res, next) => {
   const { email, otp } = req.body;
   const result = await AuthService.verifyUser(email, Number(otp));
@@ -112,6 +170,7 @@ export const AuthController = {
   forgotPasswordRequest,
   resetPassword,
   userLogin,
+  userLogout,
   getNewAccessToken,
   updatePassword,
   reSendOtp,

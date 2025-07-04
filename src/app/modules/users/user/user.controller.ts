@@ -16,17 +16,46 @@ const stripe = new Stripe(appConfig.stripe_key);
 
 const createUser = catchAsync(async (req, res) => {
   const userData = req.body;
-
   const result = await UserService.createUser(userData);
 
-  // Set refresh token cookie with long expiration (1 year)
-  res.cookie("refreshToken", result.refreshToken, {
-    secure: appConfig.server.node_env === "production",
-    httpOnly: true,
-    maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year in milliseconds
-    sameSite: "strict",
-    path: "/",
-  });
+  // console.log("Cookies set:", {
+  //   isAuthenticated: true,
+  //   accessToken: result.accessToken ? "SET" : "NOT SET",
+  //   refreshToken: result.refreshToken ? "SET" : "NOT SET",
+  // });
+
+  if (result.accessToken && result.refreshToken) {
+    const isProduction = process.env.NODE_ENV === "production";
+
+    // Set isAuthenticated cookie with long expiration (1 year)
+    res.cookie("isAuthenticated", true, {
+      secure: isProduction,
+      httpOnly: true,
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+      path: "/",
+    });
+
+    // Set accessToken cookie with long expiration (1 year)
+    res.cookie("accessToken", result.accessToken, {
+      secure: isProduction,
+      httpOnly: true,
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+      path: "/",
+    });
+
+    // Set refreshToken cookie with long expiration (1 year)
+    res.cookie("refreshToken", result.refreshToken, {
+      secure: isProduction,
+      httpOnly: true,
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+      path: "/",
+    });
+
+    // console.log("Cookies set successfully");
+  }
 
   sendResponse(res, {
     success: true,
@@ -85,6 +114,7 @@ const updateProfileData = catchAsync(async (req, res) => {
 });
 
 const getMe = catchAsync(async (req, res) => {
+  // console.log("Checking Auth::, ", req.cookies, req.headers);
   const result = await UserService.getMe(req.user.userId);
   sendResponse(res, {
     success: true,
@@ -255,7 +285,11 @@ const handleWebhook = catchAsync(async (req, res, next) => {
         }`
       );
 
-      event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret as string);
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        sig,
+        webhookSecret as string
+      );
       webhookVerified = true;
 
       logger.info(`Webhook verification successful with secret ${i + 1}`);
