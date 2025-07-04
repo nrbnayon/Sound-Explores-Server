@@ -23,15 +23,16 @@ export const auth =
         token = tokenWithBearer.split(" ")[1];
       }
 
-      // console.log("Token::", tokenWithBearer);
+      // console.log("Token::", tokenWithBearer);c
 
       // If no token in header, try to get from httpOnly cookies
       if (!token) {
         token = req.cookies?.accessToken;
+        console.log("Token from cookies:", token ? "Found" : "Not found");
       }
 
-      // If still no token, return unauthorized
       if (!token || token === "null") {
+        console.log("No valid token found in header or cookies");
         return next(
           new AppError(status.UNAUTHORIZED, "You are not authorized")
         );
