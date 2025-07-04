@@ -34,6 +34,7 @@ const corsOption = {
     "https://poopalert.online",
     "https://www.poopalert.online",
     "https://api.poopalert.online",
+    "https://api.poop-alert.com",
     "poop-alert.com",
     "www.poop-alert.com",
     "api.poop-alert.com",
