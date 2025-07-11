@@ -21,10 +21,10 @@ import { appConfig } from "../../../config";
 import Stripe from "stripe";
 import { SUBSCRIPTION_PLANS } from "../../../constants/subscriptionPlans";
 import { SubscriptionResponse } from "../../../types/subscription.types";
-import {
-  sendSubscriptionCancelEmail,
-  sendSubscriptionSuccessEmail,
-} from "../../../helper/notifyByEmail";
+// import {
+//   sendSubscriptionCancelEmail,
+//   sendSubscriptionSuccessEmail,
+// } from "../../../helper/notifyByEmail";
 
 if (!appConfig.stripe_key) {
   throw new Error("Stripe key is not configured");
@@ -774,12 +774,13 @@ const buySubscriptionIntoDB = async (
 
       // Send subscription success email
       if (subscription.status === "active") {
-        await sendSubscriptionSuccessEmail(updatedUser, {
-          plan,
-          price,
-          startDate,
-          endDate,
-        });
+        // await sendSubscriptionSuccessEmail(updatedUser, {
+        //   plan,
+        //   price,
+        //   startDate,
+        //   endDate,
+        // });
+        console.log("Subscription success");
       }
 
       return {
@@ -858,10 +859,10 @@ const cancelSubscriptionIntoDB = async (userId: string) => {
       }
 
       // Send subscription cancellation email
-      await sendSubscriptionCancelEmail(updatedUser, {
-        plan: user.subscription.plan,
-        endDate,
-      });
+      // await sendSubscriptionCancelEmail(updatedUser, {
+      //   plan: user.subscription.plan,
+      //   endDate,
+      // });
 
       logger.info(
         `Subscription cancelled for user ${userId}: ${cancelledSubscription.id}`
